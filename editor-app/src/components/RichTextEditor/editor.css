@@ -1,0 +1,430 @@
+/* ── Layout ─────────────────────────────────────────────── */
+.rte-wrapper {
+  border: 1px solid #d0d7de;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* ── Toolbar ─────────────────────────────────────────────── */
+.rte-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+.rte-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.rte-toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background: #d1d5db;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* ── Toolbar gomb ────────────────────────────────────────── */
+.rte-toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.rte-toolbar-btn:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.rte-toolbar-btn--active {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.rte-toolbar-btn--active:hover {
+  background: #bfdbfe;
+}
+
+.rte-toolbar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Select ──────────────────────────────────────────────── */
+.rte-toolbar-select {
+  height: 30px;
+  padding: 0 6px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  color: #374151;
+  font-size: 13px;
+  cursor: pointer;
+  max-width: 150px;
+}
+
+.rte-toolbar-select--size {
+  max-width: 70px;
+}
+
+.rte-toolbar-select:hover {
+  border-color: #9ca3af;
+}
+
+/* ── Szín választó ───────────────────────────────────────── */
+.rte-toolbar-color {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.rte-toolbar-color:hover {
+  background: #e5e7eb;
+}
+
+.rte-toolbar-color__label {
+  font-weight: 700;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rte-toolbar-color input[type="color"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* ── Bubble menu ─────────────────────────────────────────── */
+.rte-bubble-menu {
+  display: flex;
+  gap: 2px;
+  padding: 4px 6px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Editor felület ──────────────────────────────────────── */
+.rte-editor-surface {
+  padding: 16px;
+  min-height: 320px;
+}
+
+/* ── ProseMirror ─────────────────────────────────────────── */
+.ProseMirror {
+  outline: none;
+  min-height: 280px;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.ProseMirror p           { margin: 0 0 1em; }
+.ProseMirror h1          { font-size: 2rem; }
+.ProseMirror h2          { font-size: 1.5rem; }
+.ProseMirror h3          { font-size: 1.25rem; }
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3          { margin: 1.2em 0 0.6em; line-height: 1.2; }
+
+.ProseMirror ul,
+.ProseMirror ol          { padding-left: 1.5rem; margin: 0 0 1em; }
+
+.ProseMirror blockquote  { margin: 1em 0; padding-left: 1rem; border-left: 4px solid #d1d5db; color: #4b5563; }
+.ProseMirror pre         { background: #111827; color: #f9fafb; padding: 12px; border-radius: 8px; overflow-x: auto; }
+.ProseMirror img         { max-width: 100%; height: auto; display: block; margin: 1rem 0; border-radius: 8px; }
+.ProseMirror hr          { margin: 1.5rem 0; border: none; border-top: 1px solid #d1d5db; }
+.ProseMirror a           { color: #2563eb; text-decoration: underline; }
+
+.ProseMirror table       { border-collapse: collapse; width: 100%; table-layout: fixed; }
+.ProseMirror th,
+.ProseMirror td          { border: 1px solid #d1d5db; padding: 8px; vertical-align: top; }
+
+.ProseMirror-selectednode { outline: 2px solid #60a5fa; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .rte-toolbar-btn    { width: 28px; height: 28px; }
+  .rte-toolbar-select { font-size: 12px; }
+  .ProseMirror        { font-size: 15px; }
+}
+
+/* ── Kép wrapper ─────────────────────────────────────────── */
+/* A NodeViewWrapper display:block, a text-align itt hat az inline-block képre */
+[data-node-view-wrapper] {
+  width: 100%;
+}
+
+.rte-image-wrapper {
+  margin: 1rem 0;
+  width: 100%;
+  position: relative;
+}
+
+.rte-image-wrapper--selected .rte-image-container {
+  outline: 2px solid #3b82f6;
+  border-radius: 8px;
+}
+
+
+
+/* ── Átméretező fogantyú ─────────────────────────────────── */
+.rte-image-resize-handle {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 14px;
+  height: 14px;
+  background: #3b82f6;
+  border-radius: 3px;
+  cursor: se-resize;
+  border: 2px solid #fff;
+  z-index: 10;
+}
+
+/* ── Kép igazítás toolbar ────────────────────────────────── */
+.rte-image-toolbar {
+  position: absolute;
+  top: -38px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  background: rgba(0,0,0,0.75);
+  border-radius: 6px;
+  padding: 4px 8px;
+  z-index: 10;
+}
+
+.rte-image-align-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+  opacity: 0.65;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.rte-image-align-btn:hover,
+.rte-image-align-btn.active {
+  opacity: 1;
+  background: rgba(255,255,255,0.2);
+}
+
+/* wrapper-en position: relative kell a toolbar pozicionáláshoz */
+.rte-image-wrapper {
+  position: relative;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+/* ── Kép elrendezés gomb ─────────────────────────────────── */
+.rte-image-layout-btn {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 26px;
+  height: 26px;
+  background: rgba(0,0,0,0.65);
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  transition: background 0.15s;
+}
+.rte-image-layout-btn:hover { background: rgba(0,0,0,0.85); }
+
+/* ── Elrendezés panel ────────────────────────────────────── */
+.rte-image-layout-panel {
+  position: absolute;
+  top: 38px;
+  left: 6px;
+  background: #fff;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  padding: 10px;
+  z-index: 30;
+  min-width: 160px;
+}
+.rte-image-layout-panel__title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+.rte-image-layout-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.rte-image-layout-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid #e5e7eb;
+  border-radius: 5px;
+  background: #f9fafb;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rte-image-layout-option:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+.rte-image-layout-option.active {
+  background: #dbeafe;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+/* ── Kép container kijelöléskor ──────────────────────────── */
+.rte-image-container--selected img {
+  outline: 2px solid #3b82f6;
+  border-radius: 4px;
+}
+
+/* Float clearfix ────────────────────────────────────────── */
+.ProseMirror::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* ── Word-szerű elrendezés trigger gomb ──────────────────── */
+.rte-image-layout-trigger {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 26px;
+  height: 26px;
+  background: rgba(0,0,0,0.65);
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  z-index: 20;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rte-image-layout-trigger:hover {
+  background: rgba(0,0,0,0.85);
+}
+
+/* ── Word-szerű elrendezés panel ─────────────────────────── */
+.rte-layout-panel {
+  position: absolute;
+  top: 38px;
+  left: 6px;
+  background: #1e2025;
+  border: 1px solid #3a3d44;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  padding: 12px;
+  z-index: 100;
+  min-width: 190px;
+  color: #e5e7eb;
+}
+
+.rte-layout-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f3f4f6;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #3a3d44;
+}
+
+.rte-layout-panel__close {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  line-height: 1;
+}
+.rte-layout-panel__close:hover { color: #f3f4f6; background: #3a3d44; }
+
+.rte-layout-panel__section-label {
+  font-size: 10px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  margin-top: 10px;
+}
+.rte-layout-panel__section-label:first-of-type { margin-top: 0; }
+
+.rte-layout-panel__row {
+  display: flex;
+  gap: 4px;
+}
+
+.rte-layout-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 36px;
+  border: 1px solid #3a3d44;
+  border-radius: 5px;
+  background: #2a2d33;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.rte-layout-option:hover {
+  background: #3a3d44;
+  color: #e5e7eb;
+  border-color: #6b7280;
+}
+.rte-layout-option.active {
+  background: #1d4ed8;
+  border-color: #3b82f6;
+  color: #fff;
+}
