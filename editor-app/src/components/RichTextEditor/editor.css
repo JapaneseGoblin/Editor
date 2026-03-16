@@ -433,7 +433,7 @@
   display: flex;
   gap: 1.25rem;
   margin: 1rem 0;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .rte-column {
@@ -457,4 +457,65 @@
 .ProseMirror .rte-columns.ProseMirror-selectednode {
   outline: 2px solid #60a5fa;
   border-radius: 6px;
+}
+
+/* ── Státuszsor ───────────────────────────────────────────── */
+.rte-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-top: 1px solid #e5e7eb;
+  background: #f8fafc;
+  font-size: 12px;
+  color: #6b7280;
+  gap: 8px;
+}
+
+.rte-statusbar__status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 120px;
+}
+
+.rte-statusbar__status--saved  { color: #16a34a; }
+.rte-statusbar__status--saving { color: #9ca3af; }
+.rte-statusbar__status--error  { color: #dc2626; }
+.rte-statusbar__status--idle   { color: #9ca3af; }
+
+@keyframes rte-spin {
+  to { transform: rotate(360deg); }
+}
+
+.rte-statusbar__spinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #d1d5db;
+  border-top-color: #6b7280;
+  border-radius: 50%;
+  animation: rte-spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+.rte-statusbar__actions {
+  display: flex;
+  gap: 4px;
+}
+
+.rte-statusbar__btn {
+  padding: 3px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  background: #fff;
+  color: #374151;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.rte-statusbar__btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
 }
