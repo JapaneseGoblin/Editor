@@ -428,3 +428,33 @@
   border-color: #3b82f6;
   color: #fff;
 }
+/* ── Hasáb layout ─────────────────────────────────────────── */
+.rte-columns {
+  display: flex;
+  gap: 1.25rem;
+  margin: 1rem 0;
+  align-items: flex-start;
+}
+
+.rte-column {
+  flex: 1;
+  min-width: 0; /* flex gyerekek ne lógjanak ki */
+  border-left: 2px solid #e5e7eb;
+  padding-left: 1rem;
+}
+
+.rte-column:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+
+/* Kijelölt/fókuszált column kiemelése */
+.rte-column:focus-within {
+  border-left-color: #93c5fd;
+}
+
+/* ProseMirror selected node – columns wrapper */
+.ProseMirror .rte-columns.ProseMirror-selectednode {
+  outline: 2px solid #60a5fa;
+  border-radius: 6px;
+}

@@ -12,6 +12,7 @@ import { TextStyle, FontFamily, FontSize, Color } from '@tiptap/extension-text-s
 import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
 import ResizableImage from './custom/ResizableImage';
+import { Columns, Column } from './custom/Columns';
 
 import { fileToBase64 } from '../../../utils/imageUtils';
 
@@ -72,6 +73,10 @@ const extensions = [
 
   // ResizableImage – saját custom node az alap Image helyett
   ResizableImage.configure({ inline: false, allowBase64: true }),
+
+  // Hasáb layout
+  Columns,
+  Column,
 
   // Saját image paste handler (megelőzi a FileHandler-t)
   ImagePasteHandler,

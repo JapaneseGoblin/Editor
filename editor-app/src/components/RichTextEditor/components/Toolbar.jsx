@@ -5,16 +5,47 @@ import { TOOLBAR_GROUPS, FONT_FAMILIES, FONT_SIZES } from '../config/toolbar';
 import ToolbarGroup from './ToolbarGroup';
 import ToolbarButton from './ToolbarButton';
 
+const Col1Icon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+    <rect x="2" y="2" width="12" height="12" rx="1.5" opacity=".9"/>
+  </svg>
+);
+const Col2Icon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+    <rect x="1" y="2" width="6" height="12" rx="1.5"/>
+    <rect x="9" y="2" width="6" height="12" rx="1.5" opacity=".5"/>
+  </svg>
+);
+const Col3Icon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+    <rect x="1"  y="2" width="4" height="12" rx="1.5"/>
+    <rect x="6"  y="2" width="4" height="12" rx="1.5" opacity=".6"/>
+    <rect x="11" y="2" width="4" height="12" rx="1.5" opacity=".35"/>
+  </svg>
+);
+
 export default function Toolbar({ editor, onSetLink, onAddImageByUrl, onAddImageByFile }) {
-  const { fontFamily, fontSize } = useEditorState({
+  const { fontFamily, fontSize, inColumns, columnCount } = useEditorState({
     editor,
     selector: (ctx) => ({
-      fontFamily: ctx.editor.getAttributes('textStyle').fontFamily || '',
-      fontSize:   ctx.editor.getAttributes('textStyle').fontSize   || '',
+      fontFamily:  ctx.editor.getAttributes('textStyle').fontFamily || '',
+      fontSize:    ctx.editor.getAttributes('textStyle').fontSize   || '',
+      inColumns:   ctx.editor.isActive('columns'),
+      columnCount: ctx.editor.getAttributes('columns').count || 0,
     }),
   });
 
   if (!editor) return null;
+
+  const handleColumns = (count) => {
+    if (!inColumns) {
+      editor.chain().focus().insertColumns(count).run();
+    } else if (columnCount === count) {
+      editor.chain().focus().removeColumns().run();
+    } else {
+      editor.chain().focus().setColumnsCount(count).run();
+    }
+  };
 
   return (
     <div className="rte-toolbar">
@@ -26,6 +57,26 @@ export default function Toolbar({ editor, onSetLink, onAddImageByUrl, onAddImage
           )}
         </React.Fragment>
       ))}
+
+      <div className="rte-toolbar-divider" />
+
+      <div className="rte-toolbar-group">
+        <button
+          className={`rte-toolbar-btn${inColumns && columnCount === 1 ? ' rte-toolbar-btn--active' : ''}`}
+          title="1 hasáb (normál)"
+          onClick={() => handleColumns(1)}
+        ><Col1Icon /></button>
+        <button
+          className={`rte-toolbar-btn${inColumns && columnCount === 2 ? ' rte-toolbar-btn--active' : ''}`}
+          title="2 hasáb"
+          onClick={() => handleColumns(2)}
+        ><Col2Icon /></button>
+        <button
+          className={`rte-toolbar-btn${inColumns && columnCount === 3 ? ' rte-toolbar-btn--active' : ''}`}
+          title="3 hasáb"
+          onClick={() => handleColumns(3)}
+        ><Col3Icon /></button>
+      </div>
 
       <div className="rte-toolbar-divider" />
 
