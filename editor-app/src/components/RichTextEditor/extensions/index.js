@@ -13,6 +13,8 @@ import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
 import ResizableImage from './custom/ResizableImage/index';
 import { Columns, Column } from './custom/Columns';
+import { VideoEmbed } from './custom/VideoEmbed';
+import { ParagraphBackground } from './custom/ParagraphBackground';
 
 import { fileToBase64 } from '../../../utils/imageUtils';
 
@@ -77,6 +79,12 @@ const extensions = [
   // Hasáb layout
   Columns,
   Column,
+
+  // Videó embed
+  VideoEmbed,
+
+  // Bekezdés háttérszín
+  ParagraphBackground,
 
   // Saját image paste handler (megelőzi a FileHandler-t)
   ImagePasteHandler,

@@ -1,14 +1,14 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 
 import extensions from './extensions';
+import { fileToBase64 } from '../../utils/imageUtils';
 import Toolbar from './components/Toolbar';
 import BubbleToolbar from './components/BubbleToolbar';
-import { useAutoSave } from './hooks/useAutoSave';
-import { useImageHandlers } from './hooks/useImageHandlers';
 import './editor.css';
 
 const STORAGE_KEY = 'rte_content';
+const BG_KEY      = 'rte_bgcolor';
 
 function getInitialContent() {
   try {
@@ -18,25 +18,74 @@ function getInitialContent() {
   return '<p>Helló, ez egy Tiptap editor.</p>';
 }
 
+function formatTime(date) {
+  return date.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' });
+}
+
 export default function RichTextEditor() {
-  const importInputRef  = useRef(null);
-  // Ref-en keresztül adjuk át a scheduleSave-t az onUpdate-nek,
-  // így nem lesz tyúk-tojás probléma (useEditor előbb fut mint useAutoSave)
-  const scheduleSaveRef = useRef(null);
+  const fileInputRef   = useRef(null);
+  const importInputRef = useRef(null);
+  const saveTimerRef   = useRef(null);
+
+  const [lastSaved,  setLastSaved]  = useState(null);
+  const [saveStatus, setSaveStatus] = useState('idle');
+  const [bgColor,    setBgColor]    = useState(() => localStorage.getItem(BG_KEY) || '#ffffff');
 
   const editor = useEditor({
     extensions,
     content: getInitialContent(),
     onUpdate: ({ editor }) => {
-      scheduleSaveRef.current?.(editor);
+      clearTimeout(saveTimerRef.current);
+      setSaveStatus('saving');
+      saveTimerRef.current = setTimeout(() => autoSave(editor), 1000);
     },
   });
 
-  const { saveStatus, statusLabel, scheduleSave, saveNow, exportJSON, importJSON } = useAutoSave(editor);
-  const { fileInputRef, addImageByUrl, addImageByFile, onFileChange } = useImageHandlers(editor);
+  useEffect(() => () => clearTimeout(saveTimerRef.current), []);
 
-  // Frissítjük a ref-et minden render után
-  scheduleSaveRef.current = scheduleSave;
+  const autoSave = useCallback((ed) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(ed.getJSON()));
+      setLastSaved(new Date());
+      setSaveStatus('saved');
+    } catch (_) {
+      setSaveStatus('error');
+    }
+  }, []);
+
+  const saveNow = useCallback(() => {
+    if (!editor) return;
+    clearTimeout(saveTimerRef.current);
+    autoSave(editor);
+  }, [editor, autoSave]);
+
+  const exportJSON = useCallback(() => {
+    if (!editor) return;
+    const blob = new Blob([JSON.stringify(editor.getJSON(), null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = `dokumentum_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [editor]);
+
+  const importJSON = useCallback((e) => {
+    const file = e.target.files?.[0];
+    if (!file || !editor) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        editor.commands.setContent(JSON.parse(evt.target.result));
+        setLastSaved(null);
+        setSaveStatus('idle');
+      } catch (_) {
+        alert('Érvénytelen JSON fájl.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }, [editor]);
 
   const setLink = useCallback(() => {
     if (!editor) return;
@@ -48,7 +97,48 @@ export default function RichTextEditor() {
       : editor.chain().focus().unsetLink().run();
   }, [editor]);
 
+  const addImageByUrl = useCallback(() => {
+    if (!editor) return;
+    const url = window.prompt('Kép URL');
+    if (url?.trim()) {
+      editor.chain().focus().insertContent({
+        type: 'resizableImage',
+        attrs: { src: url.trim(), alt: '' },
+      }).run();
+    }
+  }, [editor]);
+
+  const addImageByFile = useCallback(() => fileInputRef.current?.click(), []);
+
+  const onFileChange = useCallback(async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !editor) return;
+    const base64 = await fileToBase64(file);
+    editor.chain().focus().insertContent({
+      type: 'resizableImage',
+      attrs: { src: base64, alt: file.name },
+    }).run();
+    e.target.value = '';
+  }, [editor]);
+
+  // Videó beillesztése – üres node-ot szúr be, a NodeView maga kéri az URL-t
+  const addVideo = useCallback(() => {
+    if (!editor) return;
+    editor.chain().focus().insertContent({ type: 'videoEmbed', attrs: { src: '' } }).run();
+  }, [editor]);
+
+  // Háttérszín mentése
+  const handleBgColorChange = useCallback((color) => {
+    setBgColor(color);
+    localStorage.setItem(BG_KEY, color);
+  }, []);
+
   if (!editor) return <div>Editor betöltése...</div>;
+
+  const statusLabel = saveStatus === 'saving' ? 'Mentés...'
+    : saveStatus === 'error'  ? 'Mentési hiba!'
+    : lastSaved               ? `Mentve: ${formatTime(lastSaved)}`
+    : 'Nincs mentve';
 
   return (
     <div className="rte-wrapper">
@@ -57,10 +147,16 @@ export default function RichTextEditor() {
         onSetLink={setLink}
         onAddImageByUrl={addImageByUrl}
         onAddImageByFile={addImageByFile}
+        onAddVideo={addVideo}
+        bgColor={bgColor}
+        onBgColorChange={handleBgColorChange}
+        onSaveNow={saveNow}
+        onExportJSON={exportJSON}
+        onImportJSON={() => importInputRef.current?.click()}
       />
       <BubbleToolbar editor={editor} onSetLink={setLink} />
 
-      <div className="rte-editor-surface">
+      <div className="rte-editor-surface" style={{ background: bgColor }}>
         <EditorContent editor={editor} />
       </div>
 
@@ -69,15 +165,10 @@ export default function RichTextEditor() {
           {saveStatus === 'saving' && <span className="rte-statusbar__spinner" />}
           {statusLabel}
         </span>
-        <div className="rte-statusbar__actions">
-          <button className="rte-statusbar__btn" onClick={saveNow}>💾 Mentés</button>
-          <button className="rte-statusbar__btn" onClick={exportJSON}>⬇ Export</button>
-          <button className="rte-statusbar__btn" onClick={() => importInputRef.current?.click()}>⬆ Import</button>
-        </div>
       </div>
 
       <input ref={fileInputRef}   type="file" accept="image/png,image/jpeg,image/webp,image/gif" style={{ display: 'none' }} onChange={onFileChange} />
-      <input ref={importInputRef} type="file" accept=".json,application/json" style={{ display: 'none' }} onChange={(e) => importJSON(e)} />
+      <input ref={importInputRef} type="file" accept=".json,application/json"                    style={{ display: 'none' }} onChange={importJSON} />
     </div>
   );
 }

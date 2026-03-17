@@ -4,7 +4,7 @@ import {
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
   List, ListOrdered,
   Heading1, Heading2, Heading3,
-  Quote, Code2, Minus, Table, Link,
+  Quote, Code2, Minus, Link,
   Undo2, Redo2, Highlighter, Eraser,
 } from 'lucide-react';
 
@@ -78,7 +78,6 @@ export const TOOLBAR_GROUPS = [
       { id: 'blockquote',     icon: Quote, tooltip: 'Idézet',           action: (e) => e.chain().focus().toggleBlockquote().run(),                                      isActive: (e) => e.isActive('blockquote') },
       { id: 'codeBlock',      icon: Code2, tooltip: 'Kód blokk',        action: (e) => e.chain().focus().toggleCodeBlock().run(),                                       isActive: (e) => e.isActive('codeBlock') },
       { id: 'horizontalRule', icon: Minus, tooltip: 'Vízszintes vonal', action: (e) => e.chain().focus().setHorizontalRule().run(),                                     isActive: () => false },
-      { id: 'table',          icon: Table, tooltip: 'Táblázat',         action: (e) => e.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),  isActive: (e) => e.isActive('table') },
     ],
   },
 ];
