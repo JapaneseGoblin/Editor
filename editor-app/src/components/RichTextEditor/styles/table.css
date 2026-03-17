@@ -1,0 +1,70 @@
+/* ── Táblázat picker ──────────────────────────────────────── */
+.rte-table-picker-wrap {
+  position: relative;
+}
+
+.rte-table-picker {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+  padding: 12px;
+  z-index: 200;
+  min-width: 220px;
+}
+
+.rte-table-picker__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 8px;
+  min-height: 18px;
+  text-align: center;
+}
+
+.rte-table-picker__grid {
+  display: grid;
+  gap: 3px;
+  margin-bottom: 4px;
+}
+
+.rte-table-picker__cell {
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 3px;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.rte-table-picker__cell--active {
+  background: #dbeafe;
+  border-color: #3b82f6;
+}
+
+.rte-table-picker__divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}
+
+.rte-table-picker__custom-btn {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-align: center;
+}
+.rte-table-picker__custom-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}

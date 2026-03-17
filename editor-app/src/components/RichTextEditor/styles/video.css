@@ -1,0 +1,87 @@
+/* ── Videó embed ──────────────────────────────────────────── */
+.rte-video-input-box {
+  background: #f8fafc;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rte-video-input-box__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+.rte-video-input-box__input {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+  color: #111827;
+}
+.rte-video-input-box__input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+.rte-video-input-box__actions {
+  display: flex;
+  gap: 6px;
+}
+.rte-video-input-box__btn {
+  padding: 5px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.rte-video-input-box__btn:hover { background: #f3f4f6; }
+.rte-video-input-box__btn--primary {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #fff;
+  font-weight: 500;
+}
+.rte-video-input-box__btn--primary:hover { background: #1e40af; }
+.rte-video-input-box__btn--danger {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+.rte-video-input-box__btn--danger:hover { background: #fecaca; }
+.rte-video-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.rte-video-action-btn {
+  padding: 4px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.9);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.rte-video-action-btn:hover { background: #f3f4f6; }
+.rte-video-action-btn--danger { color: #dc2626; border-color: #fca5a5; }
+
+/* ── Videó wrapper (ugyanaz mint a képnél) ───────────────── */
+.rte-video-wrapper {
+  margin: 1rem 0;
+  width: 100%;
+  position: relative;
+}
+
+[data-node-view-wrapper][style*="float"] .rte-video-wrapper {
+  margin: 0;
+  width: 100%;
+}
+
+.rte-video-wrapper--selected .rte-video-container {
+  outline: 2px solid #3b82f6;
+  border-radius: 8px;
+}

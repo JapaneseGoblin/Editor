@@ -1,0 +1,377 @@
+/* ── Kép wrapper ─────────────────────────────────────────── */
+[data-node-view-wrapper] {
+  width: 100%;
+}
+/* FONTOS: Float módban NEM írjuk felül az inline width-et!
+   A JS wrapperStyle-ban explicit px szélesség van (pl. width:'300px'),
+   amit az !important felülírt volna – ezért ez a szabály törölve. */
+
+.rte-image-wrapper {
+  margin: 1rem 0;
+  width: 100%;
+  position: relative;
+}
+
+/* Float módban nullázzuk az összes extra függőleges helyet */
+[data-node-view-wrapper][style*="float"] {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  vertical-align: top;
+}
+[data-node-view-wrapper][style*="float"] .rte-image-wrapper {
+  margin: 0;
+  width: 100%;
+}
+
+.rte-image-wrapper--selected .rte-image-container {
+  outline: 2px solid #3b82f6;
+  border-radius: 8px;
+}
+
+/* ── Átméretező fogantyú ─────────────────────────────────── */
+.rte-image-resize-handle {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 14px;
+  height: 14px;
+  background: #3b82f6;
+  border-radius: 3px;
+  cursor: se-resize;
+  border: 2px solid #fff;
+  z-index: 10;
+}
+
+/* ── Kép igazítás toolbar ────────────────────────────────── */
+.rte-image-toolbar {
+  position: absolute;
+  top: -38px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  background: rgba(0,0,0,0.75);
+  border-radius: 6px;
+  padding: 4px 8px;
+  z-index: 10;
+}
+
+.rte-image-align-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+  opacity: 0.65;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.rte-image-align-btn:hover,
+.rte-image-align-btn.active {
+  opacity: 1;
+  background: rgba(255,255,255,0.2);
+}
+
+/* ── Kép elrendezés gomb ─────────────────────────────────── */
+.rte-image-layout-btn {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 26px;
+  height: 26px;
+  background: rgba(0,0,0,0.65);
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  transition: background 0.15s;
+}
+.rte-image-layout-btn:hover { background: rgba(0,0,0,0.85); }
+
+/* ── Elrendezés panel ────────────────────────────────────── */
+.rte-image-layout-panel {
+  position: absolute;
+  top: 38px;
+  left: 6px;
+  background: #fff;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  padding: 10px;
+  z-index: 30;
+  min-width: 160px;
+}
+.rte-image-layout-panel__title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+.rte-image-layout-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.rte-image-layout-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid #e5e7eb;
+  border-radius: 5px;
+  background: #f9fafb;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rte-image-layout-option:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+.rte-image-layout-option.active {
+  background: #dbeafe;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+/* ── Kép container kijelöléskor ──────────────────────────── */
+.rte-image-container--selected img {
+  outline: 2px solid #3b82f6;
+  border-radius: 4px;
+}
+
+/* Float clearfix ────────────────────────────────────────── */
+.ProseMirror::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* ── Word-szerű elrendezés trigger gomb ──────────────────── */
+.rte-image-layout-trigger {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 26px;
+  height: 26px;
+  background: rgba(0,0,0,0.65);
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  z-index: 20;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rte-image-layout-trigger:hover {
+  background: rgba(0,0,0,0.85);
+}
+
+/* ── Word-szerű elrendezés panel ─────────────────────────── */
+.rte-layout-panel {
+  position: absolute;
+  top: 38px;
+  left: 6px;
+  background: #1e2025;
+  border: 1px solid #3a3d44;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  padding: 12px;
+  z-index: 100;
+  min-width: 190px;
+  color: #e5e7eb;
+}
+
+.rte-layout-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f3f4f6;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #3a3d44;
+}
+
+.rte-layout-panel__close {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  line-height: 1;
+}
+.rte-layout-panel__close:hover { color: #f3f4f6; background: #3a3d44; }
+
+.rte-layout-panel__section-label {
+  font-size: 10px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  margin-top: 10px;
+}
+.rte-layout-panel__section-label:first-of-type { margin-top: 0; }
+
+.rte-layout-panel__row {
+  display: flex;
+  gap: 4px;
+}
+
+.rte-layout-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 36px;
+  border: 1px solid #3a3d44;
+  border-radius: 5px;
+  background: #2a2d33;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.rte-layout-option:hover {
+  background: #3a3d44;
+  color: #e5e7eb;
+  border-color: #6b7280;
+}
+.rte-layout-option.active {
+  background: #1d4ed8;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+/* ── Hasáb layout ─────────────────────────────────────────── */
+.rte-columns {
+  display: flex;
+  gap: 1.25rem;
+  margin: 1rem 0;
+  align-items: stretch;
+}
+
+.rte-column {
+  flex: 1;
+  min-width: 0;
+  border-left: 2px solid #e5e7eb;
+  padding-left: 1rem;
+}
+
+.rte-column:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+
+.rte-column:focus-within {
+  border-left-color: #93c5fd;
+}
+
+.ProseMirror .rte-columns.ProseMirror-selectednode {
+  outline: 2px solid #60a5fa;
+  border-radius: 6px;
+}
+
+/* ── Státuszsor ───────────────────────────────────────────── */
+.rte-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-top: 1px solid #e5e7eb;
+  background: #f8fafc;
+  font-size: 12px;
+  color: #6b7280;
+  gap: 8px;
+}
+
+.rte-statusbar__status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 120px;
+}
+
+.rte-statusbar__status--saved  { color: #16a34a; }
+.rte-statusbar__status--saving { color: #9ca3af; }
+.rte-statusbar__status--error  { color: #dc2626; }
+.rte-statusbar__status--idle   { color: #9ca3af; }
+
+@keyframes rte-spin {
+  to { transform: rotate(360deg); }
+}
+
+.rte-statusbar__spinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #d1d5db;
+  border-top-color: #6b7280;
+  border-radius: 50%;
+  animation: rte-spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+.rte-statusbar__actions {
+  display: flex;
+  gap: 4px;
+}
+
+.rte-statusbar__btn {
+  padding: 3px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  background: #fff;
+  color: #374151;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.rte-statusbar__btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+/* ── Képszerkesztő gomb ───────────────────────────────────── */
+.rte-image-edit-btn {
+  position: absolute;
+  top: 6px;
+  left: 38px;
+  width: 26px;
+  height: 26px;
+  background: rgba(0,0,0,0.65);
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  transition: background 0.15s;
+}
+.rte-image-edit-btn:hover { background: rgba(59,130,246,0.85); }
+
+/* ── Caption ─────────────────────────────────────────────── */
+.rte-image-caption {
+  font-size: 13px;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 4px;
+  font-style: italic;
+}

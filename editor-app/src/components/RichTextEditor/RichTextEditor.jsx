@@ -5,7 +5,7 @@ import extensions from './extensions';
 import { fileToBase64 } from '../../utils/imageUtils';
 import Toolbar from './components/Toolbar';
 import BubbleToolbar from './components/BubbleToolbar';
-import './editor.css';
+import './styles/index.css';
 
 const STORAGE_KEY = 'rte_content';
 const BG_KEY      = 'rte_bgcolor';
