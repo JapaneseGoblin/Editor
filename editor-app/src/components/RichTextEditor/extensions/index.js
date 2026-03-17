@@ -11,7 +11,7 @@ import { Table, TableRow, TableHeader, TableCell } from '@tiptap/extension-table
 import { TextStyle, FontFamily, FontSize, Color } from '@tiptap/extension-text-style';
 import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
-import ResizableImage from './custom/ResizableImage';
+import ResizableImage from './custom/ResizableImage/index';
 import { Columns, Column } from './custom/Columns';
 
 import { fileToBase64 } from '../../../utils/imageUtils';
