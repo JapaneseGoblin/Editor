@@ -5,6 +5,7 @@ import { TOOLBAR_GROUPS, FONT_FAMILIES, FONT_SIZES } from '../config/toolbar';
 import ToolbarGroup from './ToolbarGroup';
 import ToolbarButton from './ToolbarButton';
 import TablePicker from './TablePicker';
+import ColorPicker from './ColorPicker';
 
 // ── Ikonok ────────────────────────────────────────────────────
 const SaveIcon     = () => <Save size={14} />;
@@ -246,25 +247,24 @@ export default function Toolbar({ editor, onSetLink, onAddImageByUrl, onAddImage
             <div className="rte-ribbon__section">
               <div className="rte-ribbon__section-label">Szín</div>
               <div className="rte-toolbar-group">
-                <label className="rte-toolbar-color" title="Betűszín">
-                  <span className="rte-toolbar-color__label">A</span>
-                  <input type="color" defaultValue="#000000" onChange={(e) => editor.chain().focus().setColor(e.target.value).run()} />
-                </label>
-                <label className="rte-toolbar-color" title="Kijelölt szöveg kiemelése">
-                  <span className="rte-toolbar-color__label" style={{ background: '#fde68a' }}>A</span>
-                  <input type="color" defaultValue="#fde68a" onChange={(e) => editor.chain().focus().setHighlight({ color: e.target.value }).run()} />
-                </label>
-                <label className="rte-toolbar-color" title="Bekezdés háttérszíne (teljes sor)">
-                  <span className="rte-toolbar-color__label rte-toolbar-color__label--para">¶</span>
-                  <input type="color" defaultValue="#4a7fa5"
-                    onChange={(e) => applyParaBg(editor, e.target.value)} />
-                </label>
-                <button
-                  className="rte-toolbar-btn"
-                  title="Bekezdés háttér törlése"
-                  style={{ fontSize: 11, width: 26 }}
-                  onClick={() => applyParaBg(editor, null)}
-                >✕¶</button>
+                <ColorPicker
+                  label="A"
+                  title="Betűszín"
+                  onSelect={(c) => editor.chain().focus().setColor(c).run()}
+                  onClear={() => editor.chain().focus().unsetColor().run()}
+                />
+                <ColorPicker
+                  label={<span style={{ background: '#fde68a', padding: '0 2px' }}>A</span>}
+                  title="Szöveg kiemelése"
+                  onSelect={(c) => editor.chain().focus().setHighlight({ color: c }).run()}
+                  onClear={() => editor.chain().focus().unsetHighlight().run()}
+                />
+                <ColorPicker
+                  label="¶"
+                  title="Bekezdés háttérszíne"
+                  onSelect={(c) => applyParaBg(editor, c)}
+                  onClear={() => applyParaBg(editor, null)}
+                />
               </div>
             </div>
 
@@ -274,10 +274,13 @@ export default function Toolbar({ editor, onSetLink, onAddImageByUrl, onAddImage
             <div className="rte-ribbon__section">
               <div className="rte-ribbon__section-label">Oldal</div>
               <div className="rte-toolbar-group">
-                <label className="rte-toolbar-color" title="Oldal háttérszíne">
-                  <IconBgColor />
-                  <input type="color" value={bgColor || '#ffffff'} onChange={(e) => onBgColorChange(e.target.value)} />
-                </label>
+                <ColorPicker
+                  label={<IconBgColor />}
+                  title="Oldal háttérszíne"
+                  currentColor={bgColor}
+                  onSelect={(c) => onBgColorChange(c)}
+                  onClear={() => onBgColorChange('#ffffff')}
+                />
               </div>
             </div>
           </>
