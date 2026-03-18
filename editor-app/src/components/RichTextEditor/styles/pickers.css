@@ -138,13 +138,6 @@
 }
 .rte-col-picker-dropdown__remove:hover { background: #fecaca; }
 
-/* ── Bekezdés háttérszín ─────────────────────────────────── */
-.rte-toolbar-color__label--para {
-  font-size: 13px;
-  font-weight: 700;
-  color: #374151;
-}
-
 /* ── ColorPicker ──────────────────────────────────────────── */
 .rte-colorpicker-trigger {
   display: flex;
@@ -270,6 +263,7 @@
   outline: none;
   color: #111827;
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 .rte-colorpicker__rgb-input::-webkit-inner-spin-button,
 .rte-colorpicker__rgb-input::-webkit-outer-spin-button { -webkit-appearance: none; }

@@ -101,7 +101,6 @@ export const Columns = Node.create({
         } else {
           // Fölösleges column-ok eltávolítása (tartalom megmarad az elsőkben)
           let t = tr.setNodeMarkup(columnsPos, undefined, { count });
-          let removeStart = columnsPos + 1;
           let sizeSum = 0;
           columnsNode.forEach((col, offset, i) => {
             if (i < count) { sizeSum += col.nodeSize; }
