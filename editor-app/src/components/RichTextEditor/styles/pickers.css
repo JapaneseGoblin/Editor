@@ -346,4 +346,10 @@
   padding: 0;
   transition: color 0.15s;
 }
-.rte-colorpicker__clear-saved:hover { color: #dc2626; }
+.rte-colorpicker__clear-saved:hover { color: #dc2626; }.rte-colorpicker__clear-saved:hover { color: #dc2626; }
+/* ── Bekezdés háttérszín ─────────────────────────────────── */
+.rte-toolbar-color__label--para {
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+}

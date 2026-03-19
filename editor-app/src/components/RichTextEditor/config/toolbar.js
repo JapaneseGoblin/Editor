@@ -5,7 +5,7 @@ import {
   List, ListOrdered,
   Heading1, Heading2, Heading3,
   Quote, Code2, Minus, Link,
-  Undo2, Redo2, Eraser,
+  Undo2, Redo2, Highlighter, Eraser,
 } from 'lucide-react';
 
 export const FONT_FAMILIES = [
@@ -38,13 +38,14 @@ export const TOOLBAR_GROUPS = [
   {
     id: 'format',
     items: [
-      { id: 'bold',        icon: Bold,          tooltip: 'Félkövér',  action: (e) => e.chain().focus().toggleBold().run(),        isActive: (e) => e.isActive('bold') },
-      { id: 'italic',      icon: Italic,        tooltip: 'Dőlt',      action: (e) => e.chain().focus().toggleItalic().run(),      isActive: (e) => e.isActive('italic') },
-      { id: 'underline',   icon: Underline,     tooltip: 'Aláhúzott', action: (e) => e.chain().focus().toggleUnderline().run(),   isActive: (e) => e.isActive('underline') },
-      { id: 'strike',      icon: Strikethrough, tooltip: 'Áthúzott',  action: (e) => e.chain().focus().toggleStrike().run(),      isActive: (e) => e.isActive('strike') },
-      { id: 'superscript', icon: Superscript,   tooltip: 'Felső index', action: (e) => e.chain().focus().toggleSuperscript().run(), isActive: (e) => e.isActive('superscript') },
-      { id: 'subscript',   icon: Subscript,     tooltip: 'Alsó index',  action: (e) => e.chain().focus().toggleSubscript().run(),   isActive: (e) => e.isActive('subscript') },
-      { id: 'clear',       icon: Eraser,        tooltip: 'Formázás törlése', action: (e) => e.chain().focus().unsetAllMarks().clearNodes().run(), isActive: () => false },
+      { id: 'bold',        icon: Bold,        tooltip: 'Félkövér',        action: (e) => e.chain().focus().toggleBold().run(),        isActive: (e) => e.isActive('bold') },
+      { id: 'italic',      icon: Italic,      tooltip: 'Dőlt',            action: (e) => e.chain().focus().toggleItalic().run(),      isActive: (e) => e.isActive('italic') },
+      { id: 'underline',   icon: Underline,   tooltip: 'Aláhúzott',       action: (e) => e.chain().focus().toggleUnderline().run(),   isActive: (e) => e.isActive('underline') },
+      { id: 'strike',      icon: Strikethrough, tooltip: 'Áthúzott',      action: (e) => e.chain().focus().toggleStrike().run(),      isActive: (e) => e.isActive('strike') },
+      { id: 'superscript', icon: Superscript, tooltip: 'Felső index',     action: (e) => e.chain().focus().toggleSuperscript().run(), isActive: (e) => e.isActive('superscript') },
+      { id: 'subscript',   icon: Subscript,   tooltip: 'Alsó index',      action: (e) => e.chain().focus().toggleSubscript().run(),   isActive: (e) => e.isActive('subscript') },
+      { id: 'highlight',   icon: Highlighter, tooltip: 'Kiemelés',        action: (e) => e.chain().focus().toggleHighlight().run(),   isActive: (e) => e.isActive('highlight') },
+      { id: 'clear',       icon: Eraser,      tooltip: 'Formázás törlése',action: (e) => e.chain().focus().unsetAllMarks().clearNodes().run(), isActive: () => false },
     ],
   },
   {
@@ -58,9 +59,9 @@ export const TOOLBAR_GROUPS = [
   {
     id: 'align',
     items: [
-      { id: 'alignLeft',    icon: AlignLeft,    tooltip: 'Balra',     action: (e) => e.isActive('resizableImage') ? e.chain().focus().updateAttributes('resizableImage', { align: 'left' }).run()   : e.chain().focus().setTextAlign('left').run(),    isActive: (e) => e.isActive({ textAlign: 'left' })    || (e.isActive('resizableImage') && e.getAttributes('resizableImage').align === 'left') },
-      { id: 'alignCenter',  icon: AlignCenter,  tooltip: 'Középre',   action: (e) => e.isActive('resizableImage') ? e.chain().focus().updateAttributes('resizableImage', { align: 'center' }).run() : e.chain().focus().setTextAlign('center').run(),  isActive: (e) => e.isActive({ textAlign: 'center' })  || (e.isActive('resizableImage') && e.getAttributes('resizableImage').align === 'center') },
-      { id: 'alignRight',   icon: AlignRight,   tooltip: 'Jobbra',    action: (e) => e.isActive('resizableImage') ? e.chain().focus().updateAttributes('resizableImage', { align: 'right' }).run()  : e.chain().focus().setTextAlign('right').run(),   isActive: (e) => e.isActive({ textAlign: 'right' })   || (e.isActive('resizableImage') && e.getAttributes('resizableImage').align === 'right') },
+      { id: 'alignLeft',    icon: AlignLeft,    tooltip: 'Balra',     action: (e) => e.isActive('resizableImage') ? e.chain().focus().updateAttributes('resizableImage', { align: 'left' }).run()    : e.chain().focus().setTextAlign('left').run(),    isActive: (e) => e.isActive({ textAlign: 'left' })    || (e.isActive('resizableImage') && e.getAttributes('resizableImage').align === 'left') },
+      { id: 'alignCenter',  icon: AlignCenter,  tooltip: 'Középre',   action: (e) => e.isActive('resizableImage') ? e.chain().focus().updateAttributes('resizableImage', { align: 'center' }).run()  : e.chain().focus().setTextAlign('center').run(),  isActive: (e) => e.isActive({ textAlign: 'center' })  || (e.isActive('resizableImage') && e.getAttributes('resizableImage').align === 'center') },
+      { id: 'alignRight',   icon: AlignRight,   tooltip: 'Jobbra',    action: (e) => e.isActive('resizableImage') ? e.chain().focus().updateAttributes('resizableImage', { align: 'right' }).run()   : e.chain().focus().setTextAlign('right').run(),   isActive: (e) => e.isActive({ textAlign: 'right' })   || (e.isActive('resizableImage') && e.getAttributes('resizableImage').align === 'right') },
       { id: 'alignJustify', icon: AlignJustify, tooltip: 'Sorkizárt', action: (e) => e.chain().focus().setTextAlign('justify').run(), isActive: (e) => e.isActive({ textAlign: 'justify' }) },
     ],
   },
@@ -74,9 +75,9 @@ export const TOOLBAR_GROUPS = [
   {
     id: 'insert',
     items: [
-      { id: 'blockquote',     icon: Quote, tooltip: 'Idézet',           action: (e) => e.chain().focus().toggleBlockquote().run(),  isActive: (e) => e.isActive('blockquote') },
-      { id: 'codeBlock',      icon: Code2, tooltip: 'Kód blokk',        action: (e) => e.chain().focus().toggleCodeBlock().run(),   isActive: (e) => e.isActive('codeBlock') },
-      { id: 'horizontalRule', icon: Minus, tooltip: 'Vízszintes vonal', action: (e) => e.chain().focus().setHorizontalRule().run(), isActive: () => false },
+      { id: 'blockquote',     icon: Quote, tooltip: 'Idézet',           action: (e) => e.chain().focus().toggleBlockquote().run(),                                      isActive: (e) => e.isActive('blockquote') },
+      { id: 'codeBlock',      icon: Code2, tooltip: 'Kód blokk',        action: (e) => e.chain().focus().toggleCodeBlock().run(),                                       isActive: (e) => e.isActive('codeBlock') },
+      { id: 'horizontalRule', icon: Minus, tooltip: 'Vízszintes vonal', action: (e) => e.chain().focus().setHorizontalRule().run(),                                     isActive: () => false },
     ],
   },
 ];
