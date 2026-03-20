@@ -11,7 +11,6 @@ export function useAutoSave(editor) {
   const [lastSaved,  setLastSaved]  = useState(null);
   const [saveStatus, setSaveStatus] = useState('idle');
 
-  // Cleanup
   useEffect(() => () => clearTimeout(saveTimerRef.current), []);
 
   const autoSave = useCallback((ed) => {
@@ -24,7 +23,6 @@ export function useAutoSave(editor) {
     }
   }, []);
 
-  // Debounced trigger – az editor onUpdate-ből hívják
   const scheduleSave = useCallback((ed) => {
     clearTimeout(saveTimerRef.current);
     setSaveStatus('saving');
@@ -48,7 +46,7 @@ export function useAutoSave(editor) {
     URL.revokeObjectURL(url);
   }, [editor]);
 
-  const importJSON = useCallback((e, inputRef) => {
+  const importJSON = useCallback((e) => {
     const file = e.target.files?.[0];
     if (!file || !editor) return;
     const reader = new FileReader();

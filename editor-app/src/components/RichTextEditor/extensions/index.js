@@ -13,7 +13,7 @@ import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
 import ResizableImage from './custom/ResizableImage/index';
 import { Columns, Column } from './custom/Columns';
-import { VideoEmbed } from './custom/VideoEmbed';
+import { VideoEmbed } from './custom/VideoEmbed/index';
 import { ParagraphBackground } from './custom/ParagraphBackground';
 
 import { fileToBase64 } from '../../../utils/imageUtils';

@@ -30,5 +30,13 @@ export function useImageHandlers(editor) {
     e.target.value = '';
   }, [editor]);
 
-  return { fileInputRef, addImageByUrl, addImageByFile, onFileChange };
+  const addVideo = useCallback(() => {
+    if (!editor) return;
+    editor.chain().focus().insertContent({
+      type: 'videoEmbed',
+      attrs: { src: '' },
+    }).run();
+  }, [editor]);
+
+  return { fileInputRef, addImageByUrl, addImageByFile, onFileChange, addVideo };
 }

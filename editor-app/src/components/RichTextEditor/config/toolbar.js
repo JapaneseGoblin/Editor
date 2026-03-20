@@ -5,7 +5,7 @@ import {
   List, ListOrdered,
   Heading1, Heading2, Heading3,
   Quote, Code2, Minus, Link,
-  Undo2, Redo2, Highlighter, Eraser,
+  Eraser,
 } from 'lucide-react';
 
 export const FONT_FAMILIES = [
@@ -29,13 +29,6 @@ export const FONT_SIZES = [
 
 export const TOOLBAR_GROUPS = [
   {
-    id: 'history',
-    items: [
-      { id: 'undo', icon: Undo2, tooltip: 'Visszavonás', action: (e) => e.chain().focus().undo().run(), isActive: () => false },
-      { id: 'redo', icon: Redo2, tooltip: 'Újra',        action: (e) => e.chain().focus().redo().run(), isActive: () => false },
-    ],
-  },
-  {
     id: 'format',
     items: [
       { id: 'bold',        icon: Bold,        tooltip: 'Félkövér',        action: (e) => e.chain().focus().toggleBold().run(),        isActive: (e) => e.isActive('bold') },
@@ -44,7 +37,6 @@ export const TOOLBAR_GROUPS = [
       { id: 'strike',      icon: Strikethrough, tooltip: 'Áthúzott',      action: (e) => e.chain().focus().toggleStrike().run(),      isActive: (e) => e.isActive('strike') },
       { id: 'superscript', icon: Superscript, tooltip: 'Felső index',     action: (e) => e.chain().focus().toggleSuperscript().run(), isActive: (e) => e.isActive('superscript') },
       { id: 'subscript',   icon: Subscript,   tooltip: 'Alsó index',      action: (e) => e.chain().focus().toggleSubscript().run(),   isActive: (e) => e.isActive('subscript') },
-      { id: 'highlight',   icon: Highlighter, tooltip: 'Kiemelés',        action: (e) => e.chain().focus().toggleHighlight().run(),   isActive: (e) => e.isActive('highlight') },
       { id: 'clear',       icon: Eraser,      tooltip: 'Formázás törlése',action: (e) => e.chain().focus().unsetAllMarks().clearNodes().run(), isActive: () => false },
     ],
   },

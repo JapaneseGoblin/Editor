@@ -45,25 +45,24 @@ export default class ColorPicker extends Component {
 
   componentDidUpdate(_, prevState) {
     if (this.state.open && !prevState.open) {
-      // Panel pozíció számítás
-      if (this.wrapRef.current) {
-        const rect   = this.wrapRef.current.getBoundingClientRect();
-        const panelW = 220;
-        const viewW  = window.innerWidth;
-        const left   = rect.left + panelW > viewW - 8 ? rect.right - panelW : rect.left;
-        this.setState({
-          panelStyle: {
-            position: 'fixed',
-            top:  rect.bottom + 6,
-            left: Math.max(8, left),
-            width: panelW,
-          },
-        });
-      }
       document.addEventListener('mousedown', this.handleOutsideClick);
     } else if (!this.state.open && prevState.open) {
       document.removeEventListener('mousedown', this.handleOutsideClick);
     }
+  }
+
+  calcPanelStyle() {
+    if (!this.wrapRef.current) return {};
+    const rect   = this.wrapRef.current.getBoundingClientRect();
+    const panelW = 220;
+    const viewW  = window.innerWidth;
+    const left   = rect.left + panelW > viewW - 8 ? rect.right - panelW : rect.left;
+    return {
+      position: 'fixed',
+      top:  rect.bottom + 6,
+      left: Math.max(8, left),
+      width: panelW,
+    };
   }
 
   componentWillUnmount() {
@@ -79,7 +78,9 @@ export default class ColorPicker extends Component {
 
   handleSelect(hex) {
     this.props.onSelect(hex);
-    this.setState({ open: false });
+    if (!this.props.keepOpen) {
+      this.setState({ open: false });
+    }
   }
 
   handleClear() {
@@ -89,7 +90,10 @@ export default class ColorPicker extends Component {
 
   handleSwatchClick(hex) {
     this.setState({ rgb: hexToRgb(hex) });
-    this.handleSelect(hex);
+    this.props.onSelect(hex);
+    if (!this.props.keepOpen) {
+      this.setState({ open: false });
+    }
   }
 
   handleRgbChange(channel, val) {
@@ -116,7 +120,10 @@ export default class ColorPicker extends Component {
         <button
           className="rte-colorpicker-trigger"
           title={title}
-          onClick={() => this.setState(s => ({ open: !s.open }))}
+          onClick={() => this.setState(s => ({
+            open: !s.open,
+            panelStyle: !s.open ? this.calcPanelStyle() : s.panelStyle,
+          }))}
         >
           <span className="rte-colorpicker-trigger__label">{label}</span>
           <span
