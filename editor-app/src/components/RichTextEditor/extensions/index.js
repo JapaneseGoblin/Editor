@@ -20,8 +20,6 @@ import { fileToBase64 } from '../../../utils/imageUtils';
 
 const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
 
-// Saját paste handler – magasabb prioritással fut le mint a FileHandler,
-// visszaad true-t, így leállítja a többi handlert (nincs dupla beillesztés)
 const ImagePasteHandler = Extension.create({
   name: 'imagePasteHandler',
 
@@ -47,7 +45,7 @@ const ImagePasteHandler = Extension.create({
               }).run();
             });
 
-            return true; // leállítja az összes többi paste handlert
+            return true;
           },
         },
       }),
@@ -73,23 +71,17 @@ const extensions = [
   Placeholder.configure({ placeholder: 'Kezdj el írni...' }),
   Link.configure({ openOnClick: false, autolink: true, defaultProtocol: 'https' }),
 
-  // ResizableImage – saját custom node az alap Image helyett
   ResizableImage.configure({ inline: false, allowBase64: true }),
 
-  // Hasáb layout
   Columns,
   Column,
 
-  // Videó embed
   VideoEmbed,
 
-  // Bekezdés háttérszín
   ParagraphBackground,
 
-  // Saját image paste handler (megelőzi a FileHandler-t)
   ImagePasteHandler,
 
-  // FileHandler – csak drag&drop, paste-t saját handler kezeli
   FileHandler.configure({
     allowedMimeTypes: ALLOWED_IMAGE_TYPES,
     onDrop: async (editor, files, pos) => {

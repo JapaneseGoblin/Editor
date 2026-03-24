@@ -1,4 +1,3 @@
-/* ── ProseMirror ─────────────────────────────────────────── */
 .ProseMirror {
   outline: none;
   min-height: 280px;
@@ -63,7 +62,6 @@
 .ProseMirror tr:hover td {
   background: #f1f5f9;
 }
-/* Kijelölt cella */
 .ProseMirror .selectedCell {
   background: #dbeafe !important;
   outline: 2px solid #3b82f6;
@@ -72,7 +70,6 @@
 
 .ProseMirror-selectednode { outline: 2px solid #60a5fa; }
 
-/* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 768px) {
   .rte-toolbar-btn    { width: 28px; height: 28px; }
   .rte-toolbar-select { font-size: 12px; }

@@ -62,9 +62,12 @@ export default function ResizableImageView({ node, updateAttributes, selected })
   }, [updateAttributes]);
 
   const isFloat        = floatVal && floatVal !== 'none';
-  // Float stílus a külső ProseMirror elemen van kezelve (index.js addNodeView)
-  // A NodeViewWrapper-nek nem kell float – csak az igazítást kezeli block módban
-  const wrapperStyle   = {};
+  const wrapperStyle   = isFloat ? {
+    float:   floatVal,
+    width,
+    margin:  floatVal === 'left' ? '0.25rem 1.25rem 0.5rem 0' : '0.25rem 0 0.5rem 1.25rem',
+    display: 'block',
+  } : {};
   const innerStyle     = isFloat ? {} : { textAlign: align || 'left' };
   const containerStyle = {
     position:     'relative',

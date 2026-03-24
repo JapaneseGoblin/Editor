@@ -31,10 +31,8 @@ const extensions = [
   Placeholder.configure({ placeholder: 'Kezdj el írni...' }),
   Link.configure({ openOnClick: false, autolink: true, defaultProtocol: 'https' }),
 
-  // ResizableImage – saját custom node az alap Image helyett
   ResizableImage.configure({ inline: false, allowBase64: true }),
 
-  // FileHandler – drag&drop és vágólapról beillesztés
   FileHandler.configure({
     allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp', 'image/gif'],
     onDrop: async (editor, files, pos) => {

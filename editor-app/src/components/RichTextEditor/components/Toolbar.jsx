@@ -55,7 +55,6 @@ export default function Toolbar({ editor, onSetLink, onAddImageByUrl, onAddImage
   return (
     <div className="rte-ribbon">
 
-      {/* Gyors elérés */}
       <div className="rte-ribbon__quickbar">
         <button className="rte-ribbon__quick-btn" title="Visszavonás" onClick={() => editor.chain().focus().undo().run()}><Undo2 size={14} /></button>
         <button className="rte-ribbon__quick-btn" title="Újra"        onClick={() => editor.chain().focus().redo().run()}><Redo2 size={14} /></button>
@@ -65,7 +64,6 @@ export default function Toolbar({ editor, onSetLink, onAddImageByUrl, onAddImage
         <button className="rte-ribbon__quick-btn" title="JSON betöltése"      onClick={onImportJSON}><Upload   size={14} /></button>
       </div>
 
-      {/* Tab fejléc */}
       <div className="rte-ribbon__tabs">
         {tabs.map(tab => (
           <button key={tab.id}
@@ -75,10 +73,8 @@ export default function Toolbar({ editor, onSetLink, onAddImageByUrl, onAddImage
         ))}
       </div>
 
-      {/* Tab tartalom */}
       <div className="rte-ribbon__bar">
 
-        {/* ── KEZDŐLAP ── */}
         {activeTab === TAB_KEZDOLAP && (
           <>
             <div className="rte-toolbar-group">
@@ -134,7 +130,6 @@ export default function Toolbar({ editor, onSetLink, onAddImageByUrl, onAddImage
           </>
         )}
 
-        {/* ── BESZÚRÁS ── */}
         {activeTab === TAB_BESZURAS && (
           <>
             <div className="rte-ribbon__section">
@@ -167,7 +162,6 @@ export default function Toolbar({ editor, onSetLink, onAddImageByUrl, onAddImage
           </>
         )}
 
-        {/* ── TÁBLÁZAT ── */}
         {activeTab === TAB_TABLAZAT && inTable && (
           <>
             <div className="rte-ribbon__section">

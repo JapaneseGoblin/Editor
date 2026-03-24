@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import RichTextEditor from './components/RichTextEditor/RichTextEditor';
+import ArticleRenderer from './components/ArticleRenderer/ArticleRenderer';
 
-function App() {
+export default function App() {
+  const [isEditing, setIsEditing] = useState(false);
+
   return (
-    <div style={{ maxWidth: '1100px', margin: '40px auto', padding: '0 16px' }}>
-      <h1>Rich Text Editor</h1>
-      <RichTextEditor />
+    <div style={{ maxWidth: '1600px', margin: '24px auto', padding: '0 32px' }}>
+      {isEditing ? (
+        <>
+          <button
+            onClick={() => setIsEditing(false)}
+            style={{ marginBottom: 16, cursor: 'pointer' }}
+          >
+            ← Vissza a cikkhez
+          </button>
+          <RichTextEditor />
+        </>
+      ) : (
+        <ArticleRenderer onEdit={() => setIsEditing(true)} />
+      )}
     </div>
   );
 }
-
-export default App;

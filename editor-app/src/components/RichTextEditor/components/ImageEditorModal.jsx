@@ -1,6 +1,5 @@
 import React, { Component, createRef } from 'react';
 
-// ── Segédfüggvények ───────────────────────────────────────────
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new window.Image();
@@ -41,7 +40,6 @@ function applyCrop(sourceCanvas, crop) {
   return out;
 }
 
-// ── Tab (class component) ─────────────────────────────────────
 class Tab extends Component {
   render() {
     const { id, active, label, icon, onClick } = this.props;
@@ -56,7 +54,6 @@ class Tab extends Component {
   }
 }
 
-// ── SliderRow (class component) ───────────────────────────────
 class SliderRow extends Component {
   render() {
     const { label, value, min, max, step = 1, onChange, unit = '' } = this.props;
@@ -77,7 +74,6 @@ class SliderRow extends Component {
   }
 }
 
-// ── CropCanvas (class component) ──────────────────────────────
 class CropCanvas extends Component {
   constructor(props) {
     super(props);
@@ -186,7 +182,6 @@ class CropCanvas extends Component {
   }
 }
 
-// ── Főkomponens (class component) ─────────────────────────────
 export default class ImageEditorModal extends Component {
   constructor(props) {
     super(props);

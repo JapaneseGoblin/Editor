@@ -1,4 +1,3 @@
-// ── Bekezdés háttérszín helper ────────────────────────────────
 export function applyParaBg(editor, color) {
   try {
     const { state, view } = editor;
@@ -32,8 +31,6 @@ export function applyParaBg(editor, color) {
     }
 
     if (changed) {
-      // setMeta('addToHistory', false) megakadályozza hogy a szín picker
-      // minden egyes lépése a history-ba kerüljön
       tr.setMeta('addToHistory', false);
       view.dispatch(tr);
     }

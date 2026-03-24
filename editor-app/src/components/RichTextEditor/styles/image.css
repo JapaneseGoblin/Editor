@@ -1,10 +1,6 @@
-/* ── Kép wrapper ─────────────────────────────────────────── */
 [data-node-view-wrapper] {
   width: 100%;
 }
-/* FONTOS: Float módban NEM írjuk felül az inline width-et!
-   A JS wrapperStyle-ban explicit px szélesség van (pl. width:'300px'),
-   amit az !important felülírt volna – ezért ez a szabály törölve. */
 
 .rte-image-wrapper {
   margin: 1rem 0;
@@ -12,7 +8,6 @@
   position: relative;
 }
 
-/* Float módban nullázzuk az összes extra függőleges helyet */
 [data-node-view-wrapper][style*="float"] {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
@@ -28,7 +23,6 @@
   border-radius: 8px;
 }
 
-/* ── Átméretező fogantyú ─────────────────────────────────── */
 .rte-image-resize-handle {
   position: absolute;
   bottom: 4px;
@@ -42,7 +36,6 @@
   z-index: 10;
 }
 
-/* ── Kép igazítás toolbar ────────────────────────────────── */
 .rte-image-toolbar {
   position: absolute;
   top: -38px;
@@ -74,7 +67,6 @@
   background: rgba(255,255,255,0.2);
 }
 
-/* ── Kép elrendezés gomb ─────────────────────────────────── */
 .rte-image-layout-btn {
   position: absolute;
   top: 6px;
@@ -94,7 +86,6 @@
 }
 .rte-image-layout-btn:hover { background: rgba(0,0,0,0.85); }
 
-/* ── Elrendezés panel ────────────────────────────────────── */
 .rte-image-layout-panel {
   position: absolute;
   top: 38px;
@@ -143,20 +134,17 @@
   color: #1d4ed8;
 }
 
-/* ── Kép container kijelöléskor ──────────────────────────── */
 .rte-image-container--selected img {
   outline: 2px solid #3b82f6;
   border-radius: 4px;
 }
 
-/* Float clearfix ────────────────────────────────────────── */
 .ProseMirror::after {
   content: '';
   display: table;
   clear: both;
 }
 
-/* ── Word-szerű elrendezés trigger gomb ──────────────────── */
 .rte-image-layout-trigger {
   position: absolute;
   top: 6px;
@@ -179,7 +167,6 @@
   background: rgba(0,0,0,0.85);
 }
 
-/* ── Word-szerű elrendezés panel ─────────────────────────── */
 .rte-layout-panel {
   position: absolute;
   top: 38px;
@@ -257,7 +244,6 @@
   color: #fff;
 }
 
-/* ── Hasáb layout ─────────────────────────────────────────── */
 .rte-columns {
   display: flex;
   gap: 1.25rem;
@@ -286,7 +272,6 @@
   border-radius: 6px;
 }
 
-/* ── Státuszsor ───────────────────────────────────────────── */
 .rte-statusbar {
   display: flex;
   align-items: center;
@@ -347,7 +332,6 @@
   border-color: #9ca3af;
 }
 
-/* ── Képszerkesztő gomb ───────────────────────────────────── */
 .rte-image-edit-btn {
   position: absolute;
   top: 6px;
@@ -367,7 +351,6 @@
 }
 .rte-image-edit-btn:hover { background: rgba(59,130,246,0.85); }
 
-/* ── Caption ─────────────────────────────────────────────── */
 .rte-image-caption {
   font-size: 13px;
   color: #6b7280;

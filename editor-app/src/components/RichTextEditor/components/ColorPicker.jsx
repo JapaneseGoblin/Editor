@@ -135,7 +135,6 @@ export default class ColorPicker extends Component {
         {open && (
           <div ref={this.panelRef} className="rte-colorpicker-panel" style={panelStyle}>
 
-            {/* Alap színek */}
             <div className="rte-colorpicker__section-label">Színek</div>
             <div className="rte-colorpicker__grid">
               {BASE_COLORS.map(c => (
@@ -149,7 +148,6 @@ export default class ColorPicker extends Component {
               ))}
             </div>
 
-            {/* Mentett színek */}
             {saved.length > 0 && (
               <>
                 <div className="rte-colorpicker__section-header">
@@ -176,7 +174,6 @@ export default class ColorPicker extends Component {
 
             <div className="rte-colorpicker__divider" />
 
-            {/* RGB input + preview */}
             <div className="rte-colorpicker__rgb-row">
               <div
                 className="rte-colorpicker__rgb-preview"
@@ -204,7 +201,6 @@ export default class ColorPicker extends Component {
               >+</button>
             </div>
 
-            {/* Nincs szín */}
             {onClear && (
               <button className="rte-colorpicker__no-color" onClick={() => this.handleClear()}>
                 <span className="rte-colorpicker__no-color-swatch" />

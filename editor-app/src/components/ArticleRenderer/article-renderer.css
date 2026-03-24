@@ -1,0 +1,52 @@
+.article-renderer {
+  position: relative;
+}
+
+.article-renderer__edit-btn {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.article-renderer__edit-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.article-renderer__content {
+  border: none;
+  padding: 0;
+  min-height: unset;
+}
+
+.article-renderer__content img {
+  pointer-events: none;
+}
+
+
+
+.article-renderer__content [data-float="left"] {
+  float: left;
+  margin: 0.25rem 1.25rem 0.5rem 0;
+  display: block;
+}
+
+.article-renderer__content [data-float="right"] {
+  float: right;
+  margin: 0.25rem 0 0.5rem 1.25rem;
+  display: block;
+}
+
+.article-renderer__content::after {
+  content: '';
+  display: table;
+  clear: both;
+}

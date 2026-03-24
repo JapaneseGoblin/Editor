@@ -1,14 +1,3 @@
-/* ── RichTextEditor stílusok ─────────────────────────────────
-   Minden CSS fájl egy logikai egységet fed le:
-   - toolbar.css   : ribbon, toolbar gombok, select, color picker, bubble menu
-   - editor.css    : ProseMirror tartalom, editor felület, responsive
-   - image.css     : kép wrapper, resize, elrendezés panel, caption
-   - modal.css     : ImageEditorModal
-   - video.css     : videó embed és wrapper
-   - table.css     : táblázat picker dropdown
-   - pickers.css   : hasáb picker, bekezdés háttérszín
-───────────────────────────────────────────────────────────── */
-
 @import './toolbar.css';
 @import './editor.css';
 @import './image.css';
