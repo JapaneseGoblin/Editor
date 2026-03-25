@@ -1,25 +1,15 @@
-import React, { useState } from 'react';
-import RichTextEditor from './components/RichTextEditor/RichTextEditor';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import NewsAndBlogs from './components/NewsAndBlogs/NewsAndBlogs';
 import ArticleRenderer from './components/ArticleRenderer/ArticleRenderer';
+import EditorPage from './components/EditorPage/EditorPage';
 
 export default function App() {
-  const [isEditing, setIsEditing] = useState(false);
-
   return (
-    <div style={{ maxWidth: '1600px', margin: '24px auto', padding: '0 32px' }}>
-      {isEditing ? (
-        <>
-          <button
-            onClick={() => setIsEditing(false)}
-            style={{ marginBottom: 16, cursor: 'pointer' }}
-          >
-            ← Vissza a cikkhez
-          </button>
-          <RichTextEditor />
-        </>
-      ) : (
-        <ArticleRenderer onEdit={() => setIsEditing(true)} />
-      )}
-    </div>
+    <Routes>
+      <Route path="/"                   element={<NewsAndBlogs />} />
+      <Route path="/article/:id"        element={<ArticleRenderer />} />
+      <Route path="/article/:id/edit"   element={<EditorPage />} />
+    </Routes>
   );
 }

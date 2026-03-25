@@ -10,29 +10,27 @@ import { useEditorLink }     from './hooks/useEditorLink';
 import { usePageBackground } from './hooks/usePageBackground';
 import './styles/index.css';
 
-const STORAGE_KEY = 'rte_content';
-
-function getInitialContent() {
+function getInitialContent(articleId) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(`rte_content_${articleId}`);
     if (raw) return JSON.parse(raw);
   } catch (_) {}
-  return '<p>Helló, ez egy Tiptap editor.</p>';
+  return '<p>Kezdj el írni...</p>';
 }
 
-export default function RichTextEditor() {
+export default function RichTextEditor({ articleId }) {
   const importInputRef = useRef(null);
 
   const editor = useEditor({
     extensions,
-    content: getInitialContent(),
+    content: getInitialContent(articleId),
     onUpdate: ({ editor }) => scheduleSave(editor),
   });
 
-  const { saveStatus, statusLabel, scheduleSave, saveNow, exportJSON, importJSON } = useAutoSave(editor);
+  const { saveStatus, statusLabel, scheduleSave, saveNow, exportJSON, importJSON } = useAutoSave(editor, articleId);
   const { fileInputRef, addImageByUrl, addImageByFile, onFileChange, addVideo }    = useImageHandlers(editor);
   const { setLink }                                                                 = useEditorLink(editor);
-  const { bgColor, handleBgColorChange }                                            = usePageBackground();
+  const { bgColor, handleBgColorChange }                                            = usePageBackground(articleId);
 
   if (!editor) return <div>Editor betöltése...</div>;
 

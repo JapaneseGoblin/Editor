@@ -1,12 +1,11 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
 
-const STORAGE_KEY = 'rte_content';
-
 function formatTime(date) {
   return date.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' });
 }
 
-export function useAutoSave(editor) {
+export function useAutoSave(editor, articleId) {
+  const storageKey  = `rte_content_${articleId}`;
   const saveTimerRef = useRef(null);
   const [lastSaved,  setLastSaved]  = useState(null);
   const [saveStatus, setSaveStatus] = useState('idle');
@@ -15,13 +14,13 @@ export function useAutoSave(editor) {
 
   const autoSave = useCallback((ed) => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(ed.getJSON()));
+      localStorage.setItem(storageKey, JSON.stringify(ed.getJSON()));
       setLastSaved(new Date());
       setSaveStatus('saved');
     } catch (_) {
       setSaveStatus('error');
     }
-  }, []);
+  }, [storageKey]);
 
   const scheduleSave = useCallback((ed) => {
     clearTimeout(saveTimerRef.current);
@@ -41,10 +40,10 @@ export function useAutoSave(editor) {
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
     a.href     = url;
-    a.download = `dokumentum_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `cikk_${articleId}_${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [editor]);
+  }, [editor, articleId]);
 
   const importJSON = useCallback((e) => {
     const file = e.target.files?.[0];

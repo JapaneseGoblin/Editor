@@ -2,7 +2,6 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { NodeViewWrapper } from '@tiptap/react';
 import { IconLayout, LAYOUT_OPTIONS } from '../ResizableImage/icons';
 
-// ── Segédfüggvények ───────────────────────────────────────────
 function getEmbedUrl(url) {
   if (!url) return null;
   const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
@@ -20,9 +19,10 @@ function isDirectVideo(url) {
 export default function VideoEmbedView({ node, updateAttributes, selected, deleteNode }) {
   const { src, width, align, float: floatVal } = node.attrs;
 
-  const startX       = useRef(0);
-  const startWidth   = useRef(0);
-  const containerRef = useRef(null);
+  const containerRef  = useRef(null);
+  const startXRef     = useRef(0);
+  const startWidthRef = useRef(0);
+
   const [editing,   setEditing]   = useState(!src);
   const [input,     setInput]     = useState(src || '');
   const [showPanel, setShowPanel] = useState(false);
@@ -41,22 +41,26 @@ export default function VideoEmbedView({ node, updateAttributes, selected, delet
   const onResizeStart = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
-    startX.current = e.clientX;
-    startWidth.current = containerRef.current
-      ? containerRef.current.offsetWidth
-      : (parseInt(width) || 400);
 
-    const onMouseMove = (e) => {
-      const diff = e.clientX - startX.current;
-      updateAttributes({ width: `${Math.max(200, startWidth.current + diff)}px` });
+    startXRef.current     = e.clientX;
+    startWidthRef.current = containerRef.current
+      ? containerRef.current.offsetWidth
+      : 400;
+
+    const onMouseMove = (moveEvent) => {
+      const diff     = moveEvent.clientX - startXRef.current;
+      const newWidth = Math.max(200, startWidthRef.current + diff);
+      updateAttributes({ width: `${newWidth}px` });
     };
+
     const onMouseUp = () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
     };
+
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
-  }, [width, updateAttributes]);
+  }, [updateAttributes]);
 
   const setLayout = useCallback((newFloat, newAlign) => {
     const updates = { float: newFloat, align: newAlign };
@@ -104,7 +108,7 @@ export default function VideoEmbedView({ node, updateAttributes, selected, delet
             </div>
           ) : (
             <>
-              <div style={{ borderRadius: 8, overflow: 'hidden', outline: selected ? '2px solid #3b82f6' : 'none', position: 'relative' }}>
+              <div style={{ borderRadius: 8, outline: selected ? '2px solid #3b82f6' : 'none', position: 'relative', overflow: 'hidden' }}>
                 {isDirectVideo(src) ? (
                   <video src={src} controls style={{ width: '100%', display: 'block' }} />
                 ) : (
@@ -122,7 +126,8 @@ export default function VideoEmbedView({ node, updateAttributes, selected, delet
 
               {selected && (
                 <>
-                  <div className="rte-image-resize-handle" onMouseDown={onResizeStart} />
+                  <div className="rte-image-resize-handle" onMouseDown={onResizeStart}
+                    style={{ position: 'absolute', bottom: 4, right: 4, zIndex: 20 }} />
                   <button className="rte-image-layout-trigger" title="Elrendezés"
                     onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setShowPanel(v => !v); }}>
                     <IconLayout />
