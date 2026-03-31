@@ -1,7 +1,9 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { NodeViewWrapper } from '@tiptap/react';
 import ImageEditorModal from '../../../components/ImageEditorModal';
-import { IconLayout, IconEdit, LAYOUT_OPTIONS } from './icons';
+import { IconLayout, IconEdit } from './icons';
+import { useResizable } from '../../../hooks/useResizable';
+import LayoutPanel from '../../../components/LayoutPanel';
 
 export default function ResizableImageView({ node, updateAttributes, selected }) {
   const {
@@ -9,45 +11,10 @@ export default function ResizableImageView({ node, updateAttributes, selected })
     caption, borderRadius, borderWidth, borderColor,
   } = node.attrs;
 
-  const startX       = useRef(0);
-  const startWidth   = useRef(0);
-  const containerRef = useRef(null);
-  const [showPanel,  setShowPanel]  = useState(false);
   const [showEditor, setShowEditor] = useState(false);
 
-  useEffect(() => {
-    if (!selected) setShowPanel(false);
-  }, [selected]);
-
-  const onResizeStart = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    startX.current = e.clientX;
-    startWidth.current = containerRef.current
-      ? containerRef.current.offsetWidth
-      : (parseInt(width) || 400);
-
-    const onMouseMove = (e) => {
-      const diff = e.clientX - startX.current;
-      updateAttributes({ width: `${Math.max(100, startWidth.current + diff)}px` });
-    };
-    const onMouseUp = () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-    };
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-  }, [width, updateAttributes]);
-
-  const setLayout = useCallback((newFloat, newAlign) => {
-    const updates = { float: newFloat, align: newAlign };
-    if (newFloat !== 'none' && (!width || !width.endsWith('px'))) {
-      const domPx = containerRef.current ? containerRef.current.offsetWidth : 0;
-      updates.width = `${domPx > 0 ? domPx : 300}px`;
-    }
-    updateAttributes(updates);
-    setShowPanel(false);
-  }, [width, updateAttributes]);
+  const { containerRef, onResizeStart, setLayout, isFloat, wrapperStyle, showPanel, setShowPanel } =
+    useResizable({ width, floatVal, align, selected, updateAttributes, minWidth: 100 });
 
   const handleEditorSave = useCallback((result) => {
     updateAttributes({
@@ -61,18 +28,11 @@ export default function ResizableImageView({ node, updateAttributes, selected })
     setShowEditor(false);
   }, [updateAttributes]);
 
-  const isFloat        = floatVal && floatVal !== 'none';
-  const wrapperStyle   = isFloat ? {
-    float:   floatVal,
-    width,
-    margin:  floatVal === 'left' ? '0.25rem 1.25rem 0.5rem 0' : '0.25rem 0 0.5rem 1.25rem',
-    display: 'block',
-  } : {};
-  const innerStyle     = isFloat ? {} : { textAlign: align || 'left' };
   const containerStyle = {
     position:     'relative',
     display:      'inline-block',
     width:        isFloat ? '100%' : width,
+    maxWidth:     '100%',
     borderRadius: borderRadius || '6px',
     overflow:     'hidden',
     border:       borderWidth && borderWidth !== '0px'
@@ -81,60 +41,45 @@ export default function ResizableImageView({ node, updateAttributes, selected })
     boxSizing:    'border-box',
   };
 
+  const stop = (e) => { e.preventDefault(); e.stopPropagation(); };
+
   return (
     <>
-      <NodeViewWrapper style={wrapperStyle} data-drag-handle>
-        <div
-          className={`rte-image-wrapper${selected ? ' rte-image-wrapper--selected' : ''}`}
-          style={innerStyle}
-        >
+      <NodeViewWrapper style={wrapperStyle}>
+        <div className={`rte-image-wrapper${selected ? ' rte-image-wrapper--selected' : ''}`}>
           <div ref={containerRef} className="rte-image-container" style={containerStyle}>
-            <img src={src} alt={alt || ''} style={{ width: '100%', height: 'auto', display: 'block' }} draggable={false} />
+            <img
+              src={src}
+              alt={alt || ''}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+              draggable={false}
+            />
+
+            <div className="rte-image-drag-handle" data-drag-handle title="Húzd át">
+              <svg viewBox="0 0 10 10" fill="currentColor" width="12" height="12">
+                <path d="M3,2 C2.45,2 2,1.55 2,1 C2,0.45 2.45,0 3,0 C3.55,0 4,0.45 4,1 C4,1.55 3.55,2 3,2 Z M3,6 C2.45,6 2,5.55 2,5 C2,4.45 2.45,4 3,4 C3.55,4 4,4.45 4,5 C4,5.55 3.55,6 3,6 Z M3,10 C2.45,10 2,9.55 2,9 C2,8.45 2.45,8 3,8 C3.55,8 4,8.45 4,9 C4,9.55 3.55,10 3,10 Z M7,2 C6.45,2 6,1.55 6,1 C6,0.45 6.45,0 7,0 C7.55,0 8,0.45 8,1 C8,1.55 7.55,2 7,2 Z M7,6 C6.45,6 6,5.55 6,5 C6,4.45 6.45,4 7,4 C7.55,4 8,4.45 8,5 C8,5.55 7.55,6 7,6 Z M7,10 C6.45,10 6,9.55 6,9 C6,8.45 6.45,8 7,8 C7.55,8 8,8.45 8,9 C8,9.55 7.55,10 7,10 Z" />
+              </svg>
+            </div>
 
             {selected && (
               <>
                 <div className="rte-image-resize-handle" onMouseDown={onResizeStart} />
-                <button className="rte-image-edit-btn" title="Képszerkesztő"
-                  onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setShowEditor(true); }}>
+                <button className="rte-image-edit-btn" title="Képszerkesztő" onMouseDown={(e) => { stop(e); setShowEditor(true); }}>
                   <IconEdit />
                 </button>
-                <button className="rte-image-layout-trigger" title="Elrendezés"
-                  onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setShowPanel(v => !v); }}>
+                <button className="rte-image-layout-trigger" title="Elrendezés" onMouseDown={(e) => { stop(e); setShowPanel(v => !v); }}>
                   <IconLayout />
                 </button>
               </>
             )}
 
             {showPanel && selected && (
-              <div className="rte-layout-panel" onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-                <div className="rte-layout-panel__header">
-                  <span>Elrendezés</span>
-                  <button className="rte-layout-panel__close"
-                    onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setShowPanel(false); }}>✕</button>
-                </div>
-                <div className="rte-layout-panel__section-label">Sortöréssel</div>
-                <div className="rte-layout-panel__row">
-                  {LAYOUT_OPTIONS.filter(o => o.float === 'none').map(opt => (
-                    <button key={opt.align}
-                      className={`rte-layout-option${floatVal === opt.float && align === opt.align ? ' active' : ''}`}
-                      title={opt.label}
-                      onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setLayout(opt.float, opt.align); }}>
-                      <opt.Icon />
-                    </button>
-                  ))}
-                </div>
-                <div className="rte-layout-panel__section-label">Szöveg körbefolyása</div>
-                <div className="rte-layout-panel__row">
-                  {LAYOUT_OPTIONS.filter(o => o.float !== 'none').map(opt => (
-                    <button key={opt.float}
-                      className={`rte-layout-option${floatVal === opt.float ? ' active' : ''}`}
-                      title={opt.label}
-                      onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setLayout(opt.float, opt.align); }}>
-                      <opt.Icon />
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <LayoutPanel
+                floatVal={floatVal}
+                align={align}
+                onSetLayout={setLayout}
+                onClose={() => setShowPanel(false)}
+              />
             )}
           </div>
 

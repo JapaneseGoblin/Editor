@@ -1,5 +1,5 @@
 [data-node-view-wrapper] {
-  width: 100%;
+  max-width: 100%;
 }
 
 .rte-image-wrapper {
@@ -21,6 +21,22 @@
 .rte-image-wrapper--selected .rte-image-container {
   outline: 2px solid #3b82f6;
   border-radius: 8px;
+}
+
+/* A globális .ProseMirror img szabály felülírása a ResizableImage-en belül */
+.rte-image-container img {
+  display: block;
+  margin: 0;
+  max-width: 100%;
+}
+
+/* Elnyomjuk a Tiptap/ProseMirror saját kijelölési outline-ját az image wrapper-en
+   és minden lehetséges szülő elemén – a saját .rte-image-container outline-unk kezeli ezt */
+.rte-image-wrapper,
+[data-node-view-wrapper]:has(.rte-image-wrapper),
+.ProseMirror-selectednode:has(.rte-image-wrapper),
+.ProseMirror-selectednode [data-node-view-wrapper] {
+  outline: none !important;
 }
 
 .rte-image-resize-handle {
@@ -357,4 +373,31 @@
   text-align: center;
   margin-top: 4px;
   font-style: italic;
+}
+/* Kép drag handle gomb – bal felső sarokban, hoverre látszik */
+.rte-image-drag-handle {
+  position: absolute;
+  top: 6px;
+  left: 68px; /* az edit gomb után */
+  width: 26px;
+  height: 26px;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 5px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+  cursor: grab;
+  z-index: 20;
+}
+
+.rte-image-container:hover .rte-image-drag-handle {
+  opacity: 1;
+}
+
+.rte-image-drag-handle:active {
+  cursor: grabbing;
+  background: rgba(0, 0, 0, 0.85);
 }

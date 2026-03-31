@@ -11,6 +11,7 @@ import { Table, TableRow, TableHeader, TableCell } from '@tiptap/extension-table
 import { TextStyle, FontFamily, FontSize, Color } from '@tiptap/extension-text-style';
 import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
+import GlobalDragHandle from 'tiptap-extension-global-drag-handle';
 import ResizableImage from './custom/ResizableImage/index';
 import { Columns, Column } from './custom/Columns';
 import { VideoEmbed } from './custom/VideoEmbed/index';
@@ -70,6 +71,12 @@ const extensions = [
   TextAlign.configure({ types: ['heading', 'paragraph'] }),
   Placeholder.configure({ placeholder: 'Kezdj el írni...' }),
   Link.configure({ openOnClick: false, autolink: true, defaultProtocol: 'https' }),
+
+  GlobalDragHandle.configure({
+    dragHandleWidth: 20,
+    scrollTreshold: 100,
+    excludedTags: ['table'],
+  }),
 
   ResizableImage.configure({ inline: false, allowBase64: true }),
 
