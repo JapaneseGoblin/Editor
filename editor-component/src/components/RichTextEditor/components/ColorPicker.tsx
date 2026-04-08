@@ -60,10 +60,15 @@ export default class ColorPicker extends Component<ColorPickerProps, ColorPicker
 
   calcPanelStyle(): React.CSSProperties {
     if (!this.wrapRef.current) return {};
-    const rect = this.wrapRef.current.getBoundingClientRect();
-    const panelW = 220;
-    const left   = rect.left + panelW > window.innerWidth - 8 ? rect.right - panelW : rect.left;
-    return { position: 'fixed', top: rect.bottom + 6, left: Math.max(8, left), width: panelW };
+    const rect    = this.wrapRef.current.getBoundingClientRect();
+    const panelW  = 220;
+    const panelH  = 340; // becsült magasság
+    // Vízszintes: ha jobbra kilógna, balra igazítjuk
+    const left = rect.left + panelW > window.innerWidth - 8 ? rect.right - panelW : rect.left;
+    // Függőleges: ha lefelé kilógna, felfelé nyitjuk
+    const fitsBelow = rect.bottom + 6 + panelH < window.innerHeight - 8;
+    const top = fitsBelow ? rect.bottom + 6 : rect.top - panelH - 6;
+    return { position: 'fixed', top: Math.max(8, top), left: Math.max(8, left), width: panelW };
   }
 
   handleOutsideClick(e: MouseEvent) {

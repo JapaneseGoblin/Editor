@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import type { RefObject } from 'react';
 import type { Editor } from '@tiptap/react';
-import { fileToBase64 } from '../../../utils/imageUtils';
+import { uploadImageToEditor } from '../../../utils/imageUpload';
 
 interface UseImageHandlersReturn {
   fileInputRef: RefObject<HTMLInputElement | null>;
@@ -32,11 +32,14 @@ export function useImageHandlers(editor: Editor | null): UseImageHandlersReturn 
   const onFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !editor) return;
-    const base64 = await fileToBase64(file);
-    editor.chain().focus().insertContent({
-      type: 'resizableImage',
-      attrs: { src: base64, alt: file.name },
-    }).run();
+
+    await uploadImageToEditor(editor, file, (src) => {
+      editor.chain().focus().insertContent({
+        type: 'resizableImage',
+        attrs: { src, alt: file.name },
+      }).run();
+    });
+
     e.target.value = '';
   }, [editor]);
 

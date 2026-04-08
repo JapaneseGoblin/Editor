@@ -3,14 +3,13 @@ import { Plugin, PluginKey } from '@tiptap/pm/state';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
 
 const AUTOCOMPLETE_KEY = new PluginKey('aiAutocomplete');
-const DEBOUNCE_MS = 4000; // ms várakozás gépelés után (rate limit miatt)
-let autocompleteEnabled = false; // alapból kikapcsolva
+const DEBOUNCE_MS = 4000; 
+let autocompleteEnabled = false; 
 
 export function setAutocompleteEnabled(val: boolean) {
   autocompleteEnabled = val;
 }
 
-// Ghost text dekoráció (halvány szöveg az aktuális pozíció után)
 function createGhostDecoration(pos: number, text: string) {
   const el = document.createElement('span');
   el.textContent = text;
@@ -40,7 +39,6 @@ export function createAIAutocompleteExtension(
           state: {
             init: (): AutocompleteState => ({ suggestion: '', decorations: DecorationSet.empty }),
             apply(tr, prev): AutocompleteState {
-              // Töröljük a javaslatot ha a felhasználó ír valamit
               if (tr.docChanged && !tr.getMeta('acceptSuggestion')) {
                 return { suggestion: '', decorations: DecorationSet.empty };
               }
@@ -59,7 +57,6 @@ export function createAIAutocompleteExtension(
             handleKeyDown(view, event) {
               const pluginState = AUTOCOMPLETE_KEY.getState(view.state) as AutocompleteState;
 
-              // Tab – elfogadja a javaslatot
               if (event.key === 'Tab' && pluginState.suggestion) {
                 event.preventDefault();
                 const { tr } = view.state;
@@ -71,7 +68,6 @@ export function createAIAutocompleteExtension(
                 return true;
               }
 
-              // Escape – elveti a javaslatot
               if (event.key === 'Escape' && pluginState.suggestion) {
                 const { tr } = view.state;
                 tr.setMeta('clearSuggestion', true);
@@ -85,29 +81,38 @@ export function createAIAutocompleteExtension(
           },
 
           view() {
+            let lastRequestedText = ''; 
+
             return {
-              update(view) {
+              update(view, prevState) {
                 if (!autocompleteEnabled) return;
+
+                if (prevState && !prevState.doc.eq(view.state.doc)) {
+                  lastRequestedText = '';
+                }
+
                 const { selection, doc } = view.state;
 
-                // Csak ha a kurzor szöveg végén van (nem kijelölés)
                 if (selection.from !== selection.to) return;
 
                 const pos  = selection.from;
                 const text = doc.textBetween(Math.max(0, pos - 200), pos, '\n');
 
-                // Ne indítsunk kérést ha túl rövid a szöveg
-                if (text.trim().length < 50) return; // Minimum 50 karakter kell az autocomplete-hez
+                if (text.trim().length < 50) return;
 
-                // Debounce
+                if (text === lastRequestedText) return;
+
                 if (timer) clearTimeout(timer);
                 timer = setTimeout(async () => {
+                  if (text !== doc.textBetween(Math.max(0, view.state.selection.from - 200), view.state.selection.from, '\n')) return;
+
+                  lastRequestedText = text; 
+
                   try {
                     const suggestion = await onComplete(text);
                     if (!suggestion || suggestion === currentSuggestion) return;
                     currentSuggestion = suggestion;
 
-                    // Ghost text dekoráció hozzáadása
                     const curPos = view.state.selection.from;
                     const deco   = createGhostDecoration(curPos, suggestion);
                     const { tr } = view.state;
@@ -117,7 +122,7 @@ export function createAIAutocompleteExtension(
                     });
                     view.dispatch(tr);
                   } catch {
-                    // Hiba esetén csendben maradunk
+                    console.log("hiba");
                   }
                 }, DEBOUNCE_MS);
               },
@@ -126,8 +131,6 @@ export function createAIAutocompleteExtension(
               },
             };
           },
-
-          // State apply kiegészítés a Meta kezeléséhez
         }),
       ];
     },

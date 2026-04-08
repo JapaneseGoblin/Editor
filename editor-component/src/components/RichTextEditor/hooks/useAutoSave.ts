@@ -31,7 +31,7 @@ export function useAutoSave(editor: Editor | null, articleId: string | number): 
   const autoSave = useCallback((ed: Editor) => {
     try {
       const json = JSON.stringify(ed.getJSON());
-      // localStorage limit ~5MB – figyelmeztetés ha közel vagyunk
+      
       if (json.length > 4 * 1024 * 1024) {
         console.warn('Tartalom közel van a tárolási limithez:', Math.round(json.length / 1024), 'KB');
       }
@@ -40,7 +40,7 @@ export function useAutoSave(editor: Editor | null, articleId: string | number): 
       setSaveStatus('saved');
     } catch (err) {
       console.error('Mentési hiba:', err);
-      // QuotaExceededError – teli van a localStorage
+
       if (err instanceof DOMException && err.name === 'QuotaExceededError') {
         setErrorMsg('A tár megtelt! Töröljön képeket vagy exportálja a tartalmat.');
         setSaveStatus('error');

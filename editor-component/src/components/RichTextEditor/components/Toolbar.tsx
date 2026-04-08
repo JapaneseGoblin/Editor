@@ -19,6 +19,7 @@ import ColumnPicker from './ColumnPicker';
 import ColorPicker from './ColorPicker';
 import { applyParaBg } from '../utils/applyParaBg';
 import { IconRowAdd, IconRowDel, IconColAdd, IconColDel, IconMerge, IconTblDel, IconVideo, IconBgColor } from './toolbarIcons';
+import { AuthTokenButton } from './AuthTokenDialog';
 
 const TAB_KEZDOLAP = 'kezdolap';
 const TAB_BESZURAS = 'beszuras';
@@ -86,7 +87,6 @@ export default function Toolbar({
     }),
   });
 
-  // Derived: ha táblázatban vagyunk, automatikusan táblázat tab; ha kilépünk, kezdőlap
   const effectiveTab = inTable
     ? TAB_TABLAZAT
     : activeTab === TAB_TABLAZAT
@@ -129,6 +129,8 @@ export default function Toolbar({
             sx={{ m: 0, gap: 0.5 }}
           />
         </Tooltip>
+        <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
+        <AuthTokenButton />
       </Box>
 
       {/* Tabok */}
@@ -137,7 +139,6 @@ export default function Toolbar({
         {tabList.map(t => <Tab key={t.id} value={t.id} label={t.label} />)}
       </Tabs>
 
-      {/* Tab tartalom */}
       <Box sx={{ display: 'flex', alignItems: 'flex-end', flexWrap: 'wrap', gap: 1, px: 1, py: 0.75, overflowX: 'auto' }}>
 
         {effectiveTab === TAB_KEZDOLAP && (

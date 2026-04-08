@@ -41,7 +41,6 @@ export default function VideoEmbedView({ node, updateAttributes, selected, delet
   const stop     = (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); };
   const embedUrl = getEmbedUrl(src);
 
-  // Videónál mindig block display, hogy a 100% szélesség legyen értelmezett
   const videoWrapperStyle: React.CSSProperties = isFloat ? {
     float:   floatVal as 'left' | 'right',
     width:   width,

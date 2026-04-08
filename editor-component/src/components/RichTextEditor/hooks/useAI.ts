@@ -21,7 +21,6 @@ export function useAI(): UseAIReturn {
   }, []);
 
   const callAI = useCallback(async (messages: { role: string; content: string }[]): Promise<string> => {
-    // Új AbortController – ne szakítsa meg az előző kérést automatikusan
     const controller = new AbortController();
     abortRef.current = controller;
     setIsLoading(true);
@@ -59,7 +58,6 @@ export function useAI(): UseAIReturn {
     }
   }, []);
 
-  // Szöveg autocomplete – folytatja amit a felhasználó elkezdett
   const complete = useCallback(async (context: string): Promise<string> => {
     return callAI([
       {
@@ -73,7 +71,6 @@ export function useAI(): UseAIReturn {
     ]);
   }, [callAI]);
 
-  // Kijelölt szöveg átírása utasítás alapján
   const rewrite = useCallback(async (text: string, instruction: string): Promise<string> => {
     return callAI([
       {

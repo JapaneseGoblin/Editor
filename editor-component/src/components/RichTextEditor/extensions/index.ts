@@ -19,10 +19,11 @@ import ResizableImage from './custom/ResizableImage/index';
 import { Columns, Column } from './custom/Columns';
 import { VideoEmbed } from './custom/VideoEmbed/index';
 import { ParagraphBackground } from './custom/ParagraphBackground';
-import { fileToBase64 } from '../../../utils/imageUtils';
+import { uploadImageToEditor } from '../../../utils/imageUpload';
 
 const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
 
+// ── Paste handler ─────────────────────────────────────────────
 const ImagePasteHandler = Extension.create({
   name: 'imagePasteHandler',
 
@@ -39,12 +40,13 @@ const ImagePasteHandler = Extension.create({
             if (files.length === 0) return false;
             event.preventDefault();
 
-            files.forEach(async (file) => {
-              const base64 = await fileToBase64(file);
-              editor.chain().insertContent({
-                type: 'resizableImage',
-                attrs: { src: base64, alt: file.name },
-              }).run();
+            files.forEach((file) => {
+              uploadImageToEditor(editor, file, (src) => {
+                editor.chain().insertContent({
+                  type: 'resizableImage',
+                  attrs: { src, alt: file.name },
+                }).run();
+              });
             });
 
             return true;
@@ -58,44 +60,38 @@ const ImagePasteHandler = Extension.create({
 const extensions = [
   StarterKit.configure({
     heading: { levels: [1, 2, 3] },
-    link: false,
-    underline: false,
+    dropcursor: { color: '#7c3aed', width: 2 },
   }),
   Underline,
   Subscript,
   Superscript,
+  Highlight.configure({ multicolor: true }),
+  TextAlign.configure({ types: ['heading', 'paragraph'] }),
+  Placeholder.configure({ placeholder: 'Kezdj el írni...' }),
+  Link.configure({ openOnClick: false, HTMLAttributes: { rel: 'noopener noreferrer' } }),
   TextStyle,
   FontFamily,
   FontSize,
   Color,
-  Highlight.configure({ multicolor: true }),
-  TextAlign.configure({ types: ['heading', 'paragraph'] }),
-  Placeholder.configure({ placeholder: 'Kezdj el írni...' }),
-  Link.configure({ openOnClick: false, autolink: true, defaultProtocol: 'https' }),
-
-  GlobalDragHandle.configure({
-    dragHandleWidth: 20,
-    scrollTreshold: 100,
-    excludedTags: ['table'],
-  }),
-
-  ResizableImage.configure({ inline: false, allowBase64: true }),
-
+  ResizableImage,
+  GlobalDragHandle,
   Columns,
   Column,
   VideoEmbed,
   ParagraphBackground,
   ImagePasteHandler,
 
+  // ── Drag & drop ──────────────────────────────────────────────
   FileHandler.configure({
     allowedMimeTypes: ALLOWED_IMAGE_TYPES,
     onDrop: async (editor, files, pos) => {
       for (const file of files) {
-        const base64 = await fileToBase64(file);
-        editor.chain().insertContentAt(pos, {
-          type: 'resizableImage',
-          attrs: { src: base64, alt: file.name },
-        }).run();
+        await uploadImageToEditor(editor, file, (src) => {
+          editor.chain().insertContentAt(pos, {
+            type: 'resizableImage',
+            attrs: { src, alt: file.name },
+          }).run();
+        });
       }
     },
   }),

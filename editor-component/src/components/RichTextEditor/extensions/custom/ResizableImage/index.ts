@@ -13,11 +13,10 @@ const ResizableImage = Image.extend({
       width: {
         default: '100%',
         parseHTML: (el) => {
-          // wrapper divből vagy img-ből olvassa ki a szélességet
           const wrapper = el.closest('[data-rte-image-wrapper]') as HTMLElement | null;
           return wrapper?.style.width || (el as HTMLElement).style.width || el.getAttribute('width') || '100%';
         },
-        renderHTML: () => ({}), // a wrapper kezeli, nem az img
+        renderHTML: () => ({}), 
       },
       align: {
         default: 'left',
@@ -58,7 +57,6 @@ const ResizableImage = Image.extend({
     };
   },
 
-  // A renderHTML wrapper divet ad ki, mint a NodeView – így a renderer is helyesen jeleníti meg
   renderHTML({ node }) {
     const { src, alt, width, align, float: floatVal,
             borderRadius, borderWidth, borderColor, caption } = node.attrs as Record<string, string>;
