@@ -15,6 +15,7 @@ import ArticleSettings  from './sections/ArticleSettings';
 import EventAccordion   from './sections/EventAccordion';
 import PublishAccordion from './sections/PublishAccordion';
 import ActionBar        from './components/ActionBar';
+import PreviewDialog    from './components/PreviewDialog';
 
 import { MOCK_ARTICLES } from '../../data/mockArticles';
 
@@ -43,10 +44,12 @@ export default function ArticleFormPage() {
     };
   }, [existingArticle]);
 
+  // formDraftId-t egyszer generáljuk, lazy useState-tel (pure init)
   const [formDraftId] = useState<string>(
     () => `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
   );
 
+  // Seed tartalmát szinkron másoljuk a form draft kulcsra – még az editor mount előtt
   useMemo(() => {
     if (!id) return;
     const seedContent = localStorage.getItem(`rte_content_${id}`);
@@ -57,6 +60,7 @@ export default function ArticleFormPage() {
 
   const { form, setField, setEsemeny, setKep, handleSubmit } = useArticleForm(initialData, formDraftId);
   const handleRovatChange = useRovatChange(setField);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const { rovat } = form;
   const isBlog      = rovat === 'blog';
@@ -152,7 +156,18 @@ export default function ArticleFormPage() {
               onMeddigKapcsolo={v => setField('meddigKapcsolo', v)}
               onPublikalasVege={v => setField('publikalasVege', v)}
             />
-            <ActionBar onSaveDraft={() => handleSubmit(true)} onPublish={() => handleSubmit(false)} />
+            <ActionBar
+              onSaveDraft={() => handleSubmit(true)}
+              onPublish={() => handleSubmit(false)}
+              onPreview={() => setPreviewOpen(true)}
+            />
+            <PreviewDialog
+              open={previewOpen}
+              onClose={() => setPreviewOpen(false)}
+              formDraftId={formDraftId}
+              articleId={id}
+              title={form.cim}
+            />
           </>
         )}
       </Box>
