@@ -2,20 +2,33 @@ import { useMemo } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import {
   Dialog, DialogTitle, DialogContent, IconButton,
-  Box, Typography, CircularProgress,
+  Box, Typography, CircularProgress, Chip, Divider,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import extensions from '../../RichTextEditor/extensions';
 import { resolveMediaUrlsCached } from '../../../utils/resolveMediaUrls';
+import { ROVAT_LABELS } from '../types';
+import type { Rovat } from '../types';
 import '../../RichTextEditor/styles/index.css';
 
+interface PreviewMeta {
+  cim:        string;
+  szerzo?:    string;
+  rovat?:     Rovat;
+  tematika?:  string[];
+  celcsoport?: string;
+  mufaj?:     string;
+  forras?:    string;
+  date?:      string;
+}
+
 interface PreviewDialogProps {
-  open: boolean;
-  onClose: () => void;
+  open:        boolean;
+  onClose:     () => void;
   formDraftId: string;
-  articleId?: string;
-  title: string;
+  articleId?:  string;
+  meta:        PreviewMeta;
 }
 
 function getPreviewContent(formDraftId: string, articleId?: string): string | object {
@@ -36,13 +49,11 @@ function PreviewEditorInner({ content }: { content: string | object }) {
     immediatelyRender: false,
   });
 
-  // Képek feloldása betöltés után
   useMemo(() => {
     if (!editor) return;
     const doc = editor.getJSON();
-    const docStr = JSON.stringify(doc);
-    if (!docStr.includes('/evoHumusz/Media/GetMedia')) return;
-    resolveMediaUrlsCached(doc, `preview_editor_${JSON.stringify(content).slice(0, 40)}`).then(resolved => {
+    if (!JSON.stringify(doc).includes('/evoHumusz/Media/GetMedia')) return;
+    resolveMediaUrlsCached(doc, `preview_${JSON.stringify(content).slice(0, 40)}`).then(resolved => {
       if (!editor.isDestroyed) editor.commands.setContent(resolved, { emitUpdate: false });
     });
   }, [editor, content]);
@@ -57,28 +68,24 @@ function PreviewEditorInner({ content }: { content: string | object }) {
   }
 
   return (
-    <Box sx={{
-      maxWidth: 1400, mx: 'auto', px: { xs: 2, sm: 6 }, py: 4,
-      '& .ProseMirror': { outline: 'none' },
-    }}>
+    <Box sx={{ '& .ProseMirror': { outline: 'none' } }}>
       <EditorContent editor={editor} />
     </Box>
   );
 }
 
-export default function PreviewDialog({ open, onClose, formDraftId, articleId, title }: PreviewDialogProps) {
+export default function PreviewDialog({ open, onClose, formDraftId, articleId, meta }: PreviewDialogProps) {
   const content = useMemo(
     () => open ? getPreviewContent(formDraftId, articleId) : '',
     [open, formDraftId, articleId]
   );
 
+  const rovatLabel = meta.rovat
+    ? (ROVAT_LABELS[meta.rovat as keyof typeof ROVAT_LABELS] ?? meta.rovat)
+    : null;
+
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="xl"
-      fullWidth
-      fullScreen
+    <Dialog open={open} onClose={onClose} fullScreen
       PaperProps={{ sx: { borderRadius: 0 } }}
     >
       <DialogTitle sx={{
@@ -87,11 +94,11 @@ export default function PreviewDialog({ open, onClose, formDraftId, articleId, t
       }}>
         <Box>
           <Typography fontWeight={700} fontSize="1rem">Előnézet</Typography>
-          {title && (
+          {meta.cim && (
             <Typography variant="caption" color="text.secondary"
-              sx={{ display: 'block', mt: 0.25, maxWidth: 500,
+              sx={{ display: 'block', mt: 0.25, maxWidth: 600,
                 overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {title}
+              {meta.cim}
             </Typography>
           )}
         </Box>
@@ -101,7 +108,75 @@ export default function PreviewDialog({ open, onClose, formDraftId, articleId, t
       </DialogTitle>
 
       <DialogContent sx={{ p: 0, overflow: 'auto' }}>
-        {open && <PreviewEditorInner content={content} />}
+        {open && (
+          <Box sx={{ maxWidth: 1400, mx: 'auto', px: { xs: 2, sm: 6 }, py: 4 }}>
+
+            {/* Fejléc metaadatok */}
+            <Box sx={{ mb: 4 }}>
+              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1.5 }}>
+                {rovatLabel && (
+                  <Chip label={rovatLabel} size="small" color="primary" variant="outlined"
+                    sx={{ fontWeight: 700, fontSize: '0.72rem' }} />
+                )}
+                {meta.mufaj && meta.mufaj !== '– Nincs –' && (
+                  <Chip label={meta.mufaj} size="small" variant="outlined"
+                    sx={{ fontSize: '0.72rem' }} />
+                )}
+              </Box>
+
+              {/* Cím */}
+              {meta.cim && (
+                <Typography variant="h3" fontWeight={800}
+                  sx={{ lineHeight: 1.2, letterSpacing: '-0.02em', mb: 1.5 }}>
+                  {meta.cim}
+                </Typography>
+              )}
+
+              {/* Szerző + dátum sor */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', mb: 1.5 }}>
+                {meta.szerzo && (
+                  <Typography variant="body2" fontWeight={600} color="text.secondary">
+                    {meta.szerzo}
+                  </Typography>
+                )}
+                <Typography variant="body2" color="text.disabled">
+                  {new Date().toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </Typography>
+              </Box>
+
+              {/* Tematika */}
+              {meta.tematika && meta.tematika.length > 0 && (
+                <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap', mb: 1 }}>
+                  {meta.tematika.map(t => (
+                    <Chip key={t} label={t} size="small"
+                      sx={{ bgcolor: 'action.hover', fontSize: '0.7rem', height: 22 }} />
+                  ))}
+                </Box>
+              )}
+
+              {/* Célcsoport + forrás */}
+              {(meta.celcsoport || meta.forras) && (
+                <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+                  {meta.celcsoport && (
+                    <Typography variant="caption" color="text.secondary">
+                      <strong>Célcsoport:</strong> {meta.celcsoport}
+                    </Typography>
+                  )}
+                  {meta.forras && (
+                    <Typography variant="caption" color="text.secondary">
+                      <strong>Forrás:</strong> {meta.forras}
+                    </Typography>
+                  )}
+                </Box>
+              )}
+            </Box>
+
+            <Divider sx={{ mb: 4 }} />
+
+            {/* Cikk szövege */}
+            <PreviewEditorInner content={content} />
+          </Box>
+        )}
       </DialogContent>
     </Dialog>
   );

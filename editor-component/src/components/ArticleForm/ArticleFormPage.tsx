@@ -166,7 +166,15 @@ export default function ArticleFormPage() {
               onClose={() => setPreviewOpen(false)}
               formDraftId={formDraftId}
               articleId={id}
-              title={form.cim}
+              meta={{
+                cim:        form.cim,
+                szerzo:     form.szerzo,
+                rovat:      form.rovat,
+                tematika:   form.tematika,
+                celcsoport: form.celcsoport,
+                mufaj:      form.mufaj,
+                forras:     form.forras,
+              }}
             />
           </>
         )}
