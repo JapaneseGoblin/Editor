@@ -1,7 +1,6 @@
 const BASE_URL   = 'https://localhost:7269';
 const MEDIA_PATH = '/evoHumusz/Media';
 
-// ── Média URL-ek ───────────────────────────────────────────────
 export function getMediaUrl(mediaId: string): string {
   return `${BASE_URL}${MEDIA_PATH}/GetMedia?mediaId=${encodeURIComponent(mediaId)}`;
 }
@@ -15,7 +14,6 @@ export function extractMediaId(src: string): string | null {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
-// ── Token kezelés ──────────────────────────────────────────────
 const TOKEN_KEY = 'humusz_auth_token';
 
 export function getToken(): string | null {
@@ -37,7 +35,6 @@ function authHeaders(): HeadersInit {
   return { Authorization: value };
 }
 
-// ── Média feltöltés ────────────────────────────────────────────
 export interface UploadResult {
   mediaId: string;
   url: string;
@@ -66,15 +63,7 @@ export async function uploadMedia(file: File): Promise<UploadResult> {
     const data = await res.json();
     const mediaId: string = typeof data === 'string' ? data : (data.mediaId ?? data.id ?? data);
     return { mediaId, url: getMediaUrl(mediaId) };
-  } else {
-    const mediaId = (await res.text()).trim();
-    return { mediaId, url: getMediaUrl(mediaId) };
   }
-}
-
-// ── Média lekérés ─────────────────────────────────────────────
-export async function fetchMedia(mediaId: string): Promise<Blob> {
-  const res = await fetch(getMediaUrl(mediaId), { headers: authHeaders() });
-  if (!res.ok) throw new Error(`Média lekérés sikertelen: ${res.status}`);
-  return res.blob();
+  const mediaId = (await res.text()).trim();
+  return { mediaId, url: getMediaUrl(mediaId) };
 }

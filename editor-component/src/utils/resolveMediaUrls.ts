@@ -31,7 +31,6 @@ export async function resolveMediaUrls(doc: JSONContent): Promise<JSONContent> {
   return doc;
 }
 
-// Modul szintű cache – StrictMode kettős mountnál nem fut le kétszer
 const _cache = new Map<string, Promise<JSONContent>>();
 
 export function resolveMediaUrlsCached(doc: JSONContent, cacheKey: string): Promise<JSONContent> {
@@ -39,8 +38,4 @@ export function resolveMediaUrlsCached(doc: JSONContent, cacheKey: string): Prom
     _cache.set(cacheKey, resolveMediaUrls(doc));
   }
   return _cache.get(cacheKey)!;
-}
-
-export function clearMediaCache(cacheKey: string): void {
-  _cache.delete(cacheKey);
 }

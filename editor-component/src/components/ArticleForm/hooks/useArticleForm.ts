@@ -3,56 +3,32 @@ import type { ArticleFormData, EsemenyFormData, Rovat } from '../types';
 import { editorKey } from '../types';
 
 const EMPTY_ESEMENY: EsemenyFormData = {
-  mode:     'uj',
-  cim:      '',
-  leiras:   '',
-  mettol:   '',
-  meddig:   '',
-  helyszin: '',
-  szin:     '#1565c0',
+  mode: 'uj', cim: '', leiras: '', mettol: '', meddig: '', helyszin: '', szin: '#1565c0',
 };
 
 const INITIAL_STATE: ArticleFormData = {
-  cim:               '',
-  kepFile:           null,
-  kepPreview:        null,
-  rovat:             '',
-  bevezeto:          '',
-  blogRovat:         '',
-  tematika:          [],
-  celcsoport:        '',
-  mufaj:             '',
-  szerzo:            '',
-  forras:            '',
-  esemeny:           EMPTY_ESEMENY,
-  idozitett:         false,
-  publikalasIdopont: '',
-  meddigKapcsolo:    false,
-  publikalasVege:    '',
+  cim: '', kepFile: null, kepPreview: null, rovat: '',
+  bevezeto: '', blogRovat: '', tematika: [],
+  celcsoport: '', mufaj: '', szerzo: '', forras: '',
+  esemeny: EMPTY_ESEMENY,
+  idozitett: false, publikalasIdopont: '',
+  meddigKapcsolo: false, publikalasVege: '',
 };
 
-function createDraftId(): string {
-  return `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-}
-
 export interface UseArticleFormReturn {
-  form:          ArticleFormData;
-  formDraftId:   string;
-  isDirty:       boolean;
-  setField:      <K extends keyof ArticleFormData>(key: K, value: ArticleFormData[K]) => void;
-  setEsemeny:    <K extends keyof EsemenyFormData>(key: K, value: EsemenyFormData[K]) => void;
-  setKep:        (file: File | null) => void;
-  handleSubmit:  (piszkozat: boolean) => void;
-  resetForm:     () => void;
+  form:         ArticleFormData;
+  formDraftId:  string;
+  setField:     <K extends keyof ArticleFormData>(key: K, value: ArticleFormData[K]) => void;
+  setEsemeny:   <K extends keyof EsemenyFormData>(key: K, value: EsemenyFormData[K]) => void;
+  setKep:       (file: File | null) => void;
+  handleSubmit: (piszkozat: boolean) => void;
 }
 
 export function useArticleForm(initialData?: Partial<ArticleFormData>, initialDraftId?: string): UseArticleFormReturn {
-  const [form, setForm] = useState<ArticleFormData>({
-    ...INITIAL_STATE,
-    ...initialData,
-  });
-  const [isDirty, setIsDirty] = useState(false);
-  const [formDraftId] = useState<string>(initialDraftId ?? createDraftId);
+  const [form, setForm] = useState<ArticleFormData>({ ...INITIAL_STATE, ...initialData });
+  const [formDraftId]   = useState<string>(
+    () => initialDraftId ?? `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
+  );
 
   useEffect(() => {
     return () => {
@@ -64,20 +40,13 @@ export function useArticleForm(initialData?: Partial<ArticleFormData>, initialDr
   const setField = useCallback(
     <K extends keyof ArticleFormData>(key: K, value: ArticleFormData[K]) => {
       setForm(prev => ({ ...prev, [key]: value }));
-      setIsDirty(true);
-    },
-    [],
+    }, []
   );
 
   const setEsemeny = useCallback(
     <K extends keyof EsemenyFormData>(key: K, value: EsemenyFormData[K]) => {
-      setForm(prev => ({
-        ...prev,
-        esemeny: { ...prev.esemeny, [key]: value },
-      }));
-      setIsDirty(true);
-    },
-    [],
+      setForm(prev => ({ ...prev, esemeny: { ...prev.esemeny, [key]: value } }));
+    }, []
   );
 
   const setKep = useCallback((file: File | null) => {
@@ -87,7 +56,6 @@ export function useArticleForm(initialData?: Partial<ArticleFormData>, initialDr
     } else {
       setForm(prev => ({ ...prev, kepFile: null, kepPreview: null }));
     }
-    setIsDirty(true);
   }, []);
 
   const handleSubmit = useCallback((piszkozat: boolean) => {
@@ -98,12 +66,7 @@ export function useArticleForm(initialData?: Partial<ArticleFormData>, initialDr
     alert(piszkozat ? 'Piszkozat mentve! (konzol)' : 'Publikálva! (konzol)');
   }, [form, formDraftId]);
 
-  const resetForm = useCallback(() => {
-    setForm(INITIAL_STATE);
-    setIsDirty(false);
-  }, []);
-
-  return { form, formDraftId, isDirty, setField, setEsemeny, setKep, handleSubmit, resetForm };
+  return { form, formDraftId, setField, setEsemeny, setKep, handleSubmit };
 }
 
 export function useRovatChange(setField: UseArticleFormReturn['setField']) {
