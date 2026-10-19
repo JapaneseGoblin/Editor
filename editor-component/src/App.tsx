@@ -5,7 +5,7 @@ import ArticleFormPage       from './components/ArticleForm/ArticleFormPage';
 import { TileLayoutEditor }  from './components/TileLayoutEditor';
 import { seedArticles }      from './data/seed';
 
-// Mock tartalmak betöltése localStorage-ba (csak ha még nincsenek ott)
+// Mock tartalmak beasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddtöltése localStorage-ba (csak ha még nincsenek ott)
 seedArticles();
 
 export default function App() {
